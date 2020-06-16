@@ -34,8 +34,9 @@ filenames = {C(:).name}.';
 raw = cell(length(C),1);
 
 %how_many_mice/loopvalue switch component
+%Note: Changed this to 3 to work with the partial MedPC set -Zach
 if strcmp(how_many_mice, 'selection')
-    loopvalue = 4;
+    loopvalue = 3;
 elseif strcmp(how_many_mice, 'all')
     loopvalue = 1:length(C);
 end
@@ -47,19 +48,11 @@ for ii = loopvalue
     
     % Read in the data (headers included b/c the
     raw{ii,1} = filenames(ii);
-    [~,~,raw{ii,2}] = xlsread(fullname);
+    raw{ii,2} = readcell(fullname);
 end
 
 %add file names to data's first col
 data = raw(:,1);
-
-%how_many_mice/loopvalue switch component
-if strcmp(how_many_mice, 'selection')
-    loopvalue = 4;
-elseif strcmp(how_many_mice, 'all')
-    loopvalue = 1:size(raw,1);
-end
-
 
 %Cycle through each row (session/day)
 for row = loopvalue
@@ -93,14 +86,6 @@ end
     
     
 %% Resampling for old version of Doric that had timestamp issue
-%how_many_mice/loopvalue switch component
-if strcmp(how_many_mice, 'selection')
-    loopvalue = 4;
-elseif strcmp(how_many_mice, 'all')
-    loopvalue = 1:size(data,1);
-end
-
-
 for file = loopvalue
     [resampdff, resamptime] = resample(cell2mat(data{file,2}(:,2)), cell2mat(data{file,2}(:,1)) , 121.9066);
     
@@ -135,7 +120,7 @@ end
 %% Read in MedPC Data
 %Don't have to iterate this bc everything is the the excel file
 %% Import the data
-[~, ~, medrawpresort] = xlsread(medpcfile);
+medrawpresort = readcell(medpcfile);
 medheadsum = medrawpresort(1,1:16);
 medheader = medrawpresort(1,:);
 medrawpresort = medrawpresort(2:end,:);
@@ -150,13 +135,6 @@ end
 
 medraw = medrawpresort(sortidx,:);
 clear medrawpresort;
-
-%how_many_mice/loopvalue switch component
-if strcmp(how_many_mice, 'selection')
-    loopvalue = 4;
-elseif strcmp(how_many_mice, 'all')
-    loopvalue = 1:size(medraw,1);
-end
 
 %cycle through each mouse
 for row = loopvalue
@@ -263,13 +241,6 @@ clear raw_mouse medraw
 
 %% Loop through all data files
 %scrub, add timestamp latency, zscore
-
-%how_many_mice/loopvalue switch component
-if strcmp(how_many_mice, 'selection')
-    loopvalue = 4;
-elseif strcmp(how_many_mice, 'all')
-    loopvalue = 1:size(data,1);
-end
 
 for file = loopvalue
     
@@ -401,13 +372,6 @@ clear tempdata
 
 %initialize rawtogether
 rawtogether = cell(size(data,1),2);
-
-%how_many_mice/loopvalue switch component
-if strcmp(how_many_mice, 'selection')
-    loopvalue = 4;
-elseif strcmp(how_many_mice, 'all')
-    loopvalue = 1:size(data,1);
-end
 
 for file = loopvalue
     
@@ -553,38 +517,38 @@ for file = loopvalue
     outputname = [outputfolder '\MATLAB_' data{file,1}{1}(11:end-6) '_' doric_col '_non-zscore.xlsx'];
 
     
-    xlswrite(outputname, actioncounter, 'counter');
+    writecell(actioncounter, outputname, 'Sheet', 'counter');
     
     if correct ~= 0
-        xlswrite(outputname, correct, 'correct');
+        writematrix(correct, outputname, 'Sheet', 'correct');
     end
     
     if tone ~= 0
-        xlswrite(outputname, tone, 'tone');
+        writematrix(tone, outputname, 'Sheet', 'tone');
     end
     
     if incorrect ~= 0
-        xlswrite(outputname, incorrect, 'incorrect');
+        writematrix(incorrect, outputname, 'Sheet', 'incorrect');
     end
     
     if receptacle ~= 0
-        xlswrite(outputname, receptacle, 'receptacle');
+        writematrix(receptacle, outputname, 'Sheet', 'receptacle');
     end
     
     if randrec ~= 0
-        xlswrite(outputname, randrec, 'randrec');
+        writematrix(randrec, outputname, 'Sheet', 'randrec');
     end
     
     if tonehit ~= 0
-        xlswrite(outputname, tonehit, 'tonehit');
+        writematrix(tonehit, outputname, 'Sheet', 'tonehit');
     end
     
     if tonemiss ~= 0
-        xlswrite(outputname, tonemiss, 'tonemiss');
+        writematrix(tonemiss, outputname, 'Sheet', 'tonemiss');
     end
     
     if inactive ~= 0
-        xlswrite(outputname, inactive, 'inactive');
+        writematrix(inactive, outputname, 'Sheet', 'inactive');
     end
     
 end
