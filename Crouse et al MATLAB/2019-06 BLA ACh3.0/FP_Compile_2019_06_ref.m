@@ -35,8 +35,10 @@ filenames = {C(:).name}.';
 [ sorted_filenames, ~ ] = sort_nat(filenames);
 raw = cell(length(C),1);
 
+% Changed this to be 3 to work with partial, just like with 2018-07
+% -Zach
 if strcmp(how_many_mice, 'selection')
-    loopvalue = 92;
+    loopvalue = 3;
 elseif strcmp(how_many_mice, 'all')
     loopvalue = 1:length(C);
 end
@@ -52,14 +54,6 @@ end
 
 %add file names to data's first col
 data = raw(:,1);
-
-
-%how_many_mice/loopvalue switch component
-if strcmp(how_many_mice, 'selection')
-    loopvalue = 92;
-elseif strcmp(how_many_mice, 'all')
-    loopvalue = 1:size(raw,1);
-end
 
 %Cycle through each row (session/day)
 for row = loopvalue
@@ -116,14 +110,6 @@ medrawpresort = medrawpresort(2:end,:);
 
 medraw = medrawpresort(sortidx,:);
 clear medrawpresort;
-
-
-%how_many_mice/loopvalue switch component
-if strcmp(how_many_mice, 'selection')
-    loopvalue = 92;
-elseif strcmp(how_many_mice, 'all')
-    loopvalue = 1:size(medraw,1);
-end
 
 %cycle through each mouse
 for row = loopvalue
@@ -219,16 +205,6 @@ clear raw_mouse medraw
 
 %% Loop through all data files
 %scrub, add timestamp latency, zscore
-
-
-%how_many_mice/loopvalue switch component
-if strcmp(how_many_mice, 'selection')
-    loopvalue = 92;
-elseif strcmp(how_many_mice, 'all')
-    loopvalue = 1:size(data,1);
-end
-
-
 for file = loopvalue
     
     
@@ -355,15 +331,6 @@ clear tempdata
 
 %initialize rawtogether
 rawtogether = cell(size(data,1),2);
-
-
-%how_many_mice/loopvalue switch component
-if strcmp(how_many_mice, 'selection')
-    loopvalue = 92;
-elseif strcmp(how_many_mice, 'all')
-    loopvalue = 1:size(data,1);
-end
-
 
 for file = loopvalue
     
