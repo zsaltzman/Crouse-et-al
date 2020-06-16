@@ -36,7 +36,7 @@ for ii = 1:length(C)
     
     % Read in the data (headers included b/c the
     raw{ii,1} = filenames(ii);
-    [~,~,raw{ii,2}] = xlsread(fullname);
+    raw{ii,2} = readcell(fullname);
 end
 
 %add file names to data's first col
@@ -104,7 +104,7 @@ end
 
 
 %% Import the data
-[~, ~, medrawpresort] = xlsread(medpcfile);
+medrawpresort = readcell(medpcfile);
 medheadsum = medrawpresort(1,1:16);
 medheader = medrawpresort(1,:);
 medrawpresort = medrawpresort(2:end,:);
@@ -515,38 +515,38 @@ for file = 1:size(data,1)
     outputname = [outputfolder '\MATLAB_' data{file,1}{1}(11:end-6) '.xlsx'];
 
     
-    xlswrite(outputname, actioncounter, 'counter');
+    writecell(actioncounter, outputname, 'Sheet', 'counter');
     
     if correct ~= 0
-        xlswrite(outputname, correct, 'correct');
+        writematrix(correct, outputname, 'Sheet', 'correct');
     end
     
     if tone ~= 0
-        xlswrite(outputname, tone, 'tone');
+        writematrix(tone, outputname, 'Sheet', 'tone');
     end
     
     if incorrect ~= 0
-        xlswrite(outputname, incorrect, 'incorrect');
+        writematrix(incorrect, outputname, 'Sheet', 'incorrect');
     end
     
     if receptacle ~= 0
-        xlswrite(outputname, receptacle, 'receptacle');
+        writematrix(receptacle, outputname, 'Sheet', 'receptacle');
     end
     
     if randrec ~= 0
-        xlswrite(outputname, randrec, 'randrec');
+        writematrix(randrec, outputname, 'Sheet', 'randrec');
     end
     
     if tonehit ~= 0
-        xlswrite(outputname, tonehit, 'tonehit');
+        writematrix(tonehit, outputname, 'Sheet', 'tonehit');
     end
     
     if tonemiss ~= 0
-        xlswrite(outputname, tonemiss, 'tonemiss');
+        writematrix(tonemiss, outputname, 'Sheet', 'tonemiss');
     end
     
     if inactive ~= 0
-        xlswrite(outputname, inactive, 'inactive');
+        writematrix(inactive, outputname, 'Sheet', 'inactive');
     end
     
 end
@@ -562,7 +562,7 @@ file = 1;
 
 timestampfile = data{file,5}(timeind-610:timeind+1221,1)-data{file,5}(timeind,1);
 
-xlswrite(timestampfilename,timestampfile)
+writematrix(timestampfile, timestampfilename);
 
 
 %% Save data in file

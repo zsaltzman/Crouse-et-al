@@ -10,5 +10,5 @@ function data = subtractReferenceAndSave(df_f0, directory, filename, DIO)
   fid = fopen(filename_w,'w'); 
   fprintf(fid,'%s\n',textHeader);
   fclose(fid);
-  dlmwrite(filename_w, data, 'delimiter', ',', '-append', 'precision','%.5f'); 
+  dlmwrite(filename_w, data, 'delimiter', ',', '-append', 'precision','%.5f'); % There isn't another function that exactly replicates this functionality, so I left it as-is. -Zach
 end

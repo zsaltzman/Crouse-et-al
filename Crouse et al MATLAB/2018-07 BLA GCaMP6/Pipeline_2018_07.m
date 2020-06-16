@@ -48,11 +48,11 @@ save(getPipelineVarsFilename);
 MDIR_DIRECTORY_NAME = FP_OUTPUT_DIRECTORY;
 make_directory
 
-%Fig_3C_S3_2A_summary_2018_07
+Fig_3C_S3_2A_summary_2018_07
 
-%Basic_FP_processing
+Basic_FP_processing
 
-%FP_Compile_2018_07 
+FP_Compile_2018_07 
 
 FP_Compile_2018_07_ref
 

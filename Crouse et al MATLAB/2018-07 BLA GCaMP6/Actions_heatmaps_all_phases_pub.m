@@ -28,7 +28,7 @@ variables = ["correct" "tone" "incorrect" "receptacle" "randrec" "tonehit" "tone
 prism_variables = ["p_correct" "p_tone" "p_incorrect" "p_receptacle" "p_randrec" "p_tonehit" "p_tonemiss" "p_inactive"];
 
 %import timestamp
-time = xlsread(timestampfile);
+time = readmatrix(timestampfile);
 graphtime = time;
 
 %initialize
