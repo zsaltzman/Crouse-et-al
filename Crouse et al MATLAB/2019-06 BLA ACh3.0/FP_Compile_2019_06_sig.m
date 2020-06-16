@@ -1,13 +1,20 @@
-%% FP_Compile_2019_06_v1
+%% FP_Compile_2019_06_v1_sig
 
 
 clear;
 load(getPipelineVarsFilename);
 
+%use this switch (comment how_many_mice = 'selection'; and uncomment the
+%next line) to compile the individual day data for all mice instead of just
+%the mouse depcited in the manuscript figure. Limiting to just this mouse
+%was done for speed since this script takes the longest. 
+how_many_mice = 'selection';
+% how_many_mice = 'all';
+
 exp = '2019-06';
  
 folder = FP_PROC_DIRECTORY;
-outputfolder = FP_COMPILE_DIRECTORY;
+outputfolder = FP_COMPILE_REF_SIG_DIRECTORY;
 outputfile = '2019-06 App MATLAB Output';
 medpcfile = FP_MEDPC_FILE;
 
@@ -16,10 +23,7 @@ timestampfolder = FP_TIMESTAMP_FILE;
 MDIR_DIRECTORY_NAME = outputfolder;
 make_directory
 
-MDIR_DIRECTORY_NAME = FP_MATLAB_VARS;
-make_directory
-
-codename = 'FP_Compile_2019_06_v1';
+codename = 'FP_Compile_2019_06_v1_sig';
 
 %set the variable letters that you're pulling
 %Correct = B, Inactive = D, Receptacle = G, Reward = H, Tone on = K
@@ -33,22 +37,34 @@ filenames = {C(:).name}.';
 [ sorted_filenames, ~ ] = sort_nat(filenames);
 raw = cell(length(C),1);
 
+%how_many_mice/loopvalue switch component
+if strcmp(how_many_mice, 'selection')
+    loopvalue = 92;
+elseif strcmp(how_many_mice, 'all')
+    loopvalue = 1:length(C);
+end
 
-for ii = 1:length(C)
+for ii = loopvalue
     % Create the full file name and partial filename
     fullname = [folder '\' sorted_filenames{ii}];
     
     % Read in the data (headers included b/c the
     raw{ii,1} = sorted_filenames(ii);
-    [~,~,raw{ii,2}] = xlsread(fullname);
+    raw{ii,2} = readcell(fullname);
 end
 
 %add file names to data's first col
 data = raw(:,1);
 
+%how_many_mice/loopvalue switch component
+if strcmp(how_many_mice, 'selection')
+    loopvalue = 92;
+elseif strcmp(how_many_mice, 'all')
+    loopvalue = 1:size(raw,1);
+end
 
 %Cycle through each row (session/day)
-for row = 1:size(raw,1)
+for row = loopvalue
     
     
     %Cycle through each column/row (without grabbing headers)
@@ -59,8 +75,9 @@ for row = 1:size(raw,1)
             data{row,2}(:,1) = raw{row,2}(2:end,column);
         end
         
-        %Grab dF/F col
+        %Sig: 'Ca2+ Signal (DF/F0)'
         if strcmp(raw{row,2}{1,column}, 'Ca2+ Signal (DF/F0)')
+            doric_col = 'signal';
             data{row,2}(:,2) = raw{row,2}(2:end,column);
         end
         
@@ -87,12 +104,11 @@ for row = 1:size(data,1)
 end
 
 %% Import the data
-[~, ~, medrawpresort] = xlsread(medpcfile);
+medrawpresort = readcell(medpcfile);
 %only imported Cued and CuedTO
 
 %cut off column headings and sort by animal ID, ascending order
-%important!: make sure medpc2excel imported by ascending date
-%order, can figure out a way to do this in MATLAB if needed
+%important!: make sure medpc2excel imported by ascending date order
 medheadsum = medrawpresort(1,1:16);
 medheader = medrawpresort(1,:);
 medrawpresort = medrawpresort(2:end,:);
@@ -100,25 +116,18 @@ medrawpresort = medrawpresort(2:end,:);
 [~,sortidx] = sort(cell2mat(medrawpresort(:,1)));
 
 medraw = medrawpresort(sortidx,:);
-uniquesubjects = split(filenames(:), '_');
-uniquesubjects = unique(uniquesubjects(:, 2));
-medfilt = cell(size(medraw, 1), size(medraw, 2));
-filtindex = 1;
-for subj=1:length(uniquesubjects)
-    found = find( cell2mat(medraw(:, 1)) == str2num(uniquesubjects{subj}));
-    if (~isempty(found))
-        % subtract one to account for matlab vectors starting at 1
-       medfilt(filtindex:length(found) + filtindex - 1, :) = medraw(found(1):found(length(found)), :);
-       filtindex = filtindex + length(found);
-    end
-end
 clear medrawpresort;
 
-% filter unused subjects out of medraw and sort by ascending subject number
-%cycle through each mouse
-medraw = medfilt(1:filtindex-1, :);
 
-for row = 1:size(medraw,1)
+%how_many_mice/loopvalue switch component
+if strcmp(how_many_mice, 'selection')
+    loopvalue = 92;
+elseif strcmp(how_many_mice, 'all')
+    loopvalue = 1:size(medraw,1);
+end
+
+%cycle through each mouse
+for row = loopvalue
     
     meddata = cell(1,8);
     
@@ -141,13 +150,19 @@ for row = 1:size(medraw,1)
         
         %Create output variable
         meddata{1,variable}= reshape([raw1{:}],size(raw1));
+        
+        
         medsum=medraw(row,1:16);
         
-        clearvars raw1 R ;      
+        
+        %% Clear temporary variables
+        clearvars raw1 R ;
+        
     end
     
     %% Calculate latency (cue on to Reward(First Proper NP of trial), col 9) and training day mean latency (col 10), and concat to data. Row = training day
-    
+  
+    %this next line should be the size of meddata,
     latency = cell(size(meddata,1),2);
     %probably don't need this loop since it's just 1 row per file. If
     %was looping like before (within a mouse) it'd matter
@@ -176,8 +191,11 @@ for row = 1:size(medraw,1)
     
     %probably don't need this loop since it's just 1 row per file. If
     %was looping like before (within a mouse) it'd matter
-    for datarow=1:size(meddata,1)    
+    for datarow=1:size(meddata,1)
+        
+        
         for Reward=1:size(meddata{datarow,4},2)
+            
             recepidx = find(meddata{datarow,4}(Reward)<meddata{datarow,3},1);
             if meddata{datarow,3}(recepidx)-meddata{datarow,4}(Reward)<10
                 rewlatency{datarow,1}(Reward) = meddata{datarow,3}(recepidx) - meddata{datarow,4}(Reward);
@@ -211,7 +229,16 @@ clear raw_mouse medraw
 
 %% Loop through all data files
 %scrub, add timestamp latency, zscore
-for file = 1:size(data,1)
+
+%how_many_mice/loopvalue switch component
+if strcmp(how_many_mice, 'selection')
+    loopvalue = 92;
+elseif strcmp(how_many_mice, 'all')
+    loopvalue = 1:size(data,1);
+end
+
+
+for file = loopvalue
     
     
     %% Scrub weird spikes
@@ -230,10 +257,7 @@ for file = 1:size(data,1)
     
     
     %% Make zscore cell entry (file,3)
-    dffcolumn = cell2mat(data{file,3}(:,2));
-    zdff = nanzscore(dffcolumn);
-    
-    data{file,3}(:,2) = num2cell(zdff);
+    %don't z-score here
     
     %% Trim to startpulse
     
@@ -345,11 +369,18 @@ clear tempdata
 %initialize rawtogether
 rawtogether = cell(size(data,1),2);
 
-for file = 1:size(data,1)
+%how_many_mice/loopvalue switch component
+if strcmp(how_many_mice, 'selection')
+    loopvalue = 92;
+elseif strcmp(how_many_mice, 'all')
+    loopvalue = 1:size(data,1);
+end
+
+
+for file = loopvalue
     
     cutoff = 1789.5;
-  
- 
+
     %preallocate arrays and counters
     correct = zeros(1832,0);
     correctcounter = 0;
@@ -422,13 +453,12 @@ for file = 1:size(data,1)
                     %note: this means that there will be an empty
                     %column for those rewards that don't meet this
                     %requirement
-                    
                 end
                 
-                %tone
+            %tone
             elseif data{file,5}(actionind(action),4) == 2
-                %fancy way to do it is here, but just doing 10 sec by 1221+2 extra cells jic
-                %[~,plus10ind] = min(abs(data{file,5}(actionind(action):end,1)-(data{file,5}(actionind(action),1)+10)));
+                %fancy way to do it is here, but just doing 10 sec by
+                %1221+2 extra cells just in case
                 tonecounter = tonecounter +1;
                 tone(1:end, tonecounter) = data{file,5}(actionind(action)-610:actionind(action)+1221,2);
                  
@@ -457,14 +487,13 @@ for file = 1:size(data,1)
             elseif data{file,5}(actionind(action),4) == 9
                 randreccounter = randreccounter + 1;
                 randrec(1:end,randreccounter) = data{file,5}(actionind(action)-610:actionind(action)+1221,2);
-                
-                
-                
+                       
                 %inactive
             elseif data{file,5}(actionind(action),4) == 6
                 inactivecounter = inactivecounter + 1;
                 inactive(1:end,inactivecounter) = data{file,5}(actionind(action)-610:actionind(action)+1221,2);
-            end 
+            end
+            
         end
     end
     
@@ -480,58 +509,42 @@ for file = 1:size(data,1)
     
     %write all the zdffdata into an excel sheet for an individual day, assign
     %% Write the tempdata
-    outputname = [outputfolder '\MATLAB_' data{file,1}{1}(11:end-6) '.xlsx'];
-
+    outputname = [outputfolder '\MATLAB_' data{file,1}{1}(11:end-6) '_' doric_col '_non-zscore.xlsx'];
     
-    xlswrite(outputname, actioncounter, 'counter');
+    writecell(actioncounter, outputname, 'Sheet', 'counter');
     
     if correct ~= 0
-        xlswrite(outputname, correct, 'correct');
+        writematrix(correct, outputname, 'Sheet', 'correct');
     end
     
     if tone ~= 0
-        xlswrite(outputname, tone, 'tone');
+        writematrix(tone, outputname, 'Sheet', 'tone');
     end
     
     if incorrect ~= 0
-        xlswrite(outputname, incorrect, 'incorrect');
+        writematrix(incorrect, outputname, 'Sheet', 'incorrect');
     end
     
     if receptacle ~= 0
-        xlswrite(outputname, receptacle, 'receptacle');
+        writematrix(receptacle, outputname, 'Sheet', 'receptacle');
     end
     
     if randrec ~= 0
-        xlswrite(outputname, randrec, 'randrec');
+        writematrix(randrec, outputname, 'Sheet', 'randrec');
     end
     
     if tonehit ~= 0
-        xlswrite(outputname, tonehit, 'tonehit');
+        writematrix(tonehit, outputname, 'Sheet', 'tonehit');
     end
     
     if tonemiss ~= 0
-        xlswrite(outputname, tonemiss, 'tonemiss');
+        writematrix(tonemiss, outputname, 'Sheet', 'tonemiss');
     end
     
     if inactive ~= 0
-        xlswrite(outputname, inactive, 'inactive');
+        writematrix(inactive, outputname, 'Sheet', 'inactive');
     end
 end
-
-%% Timestamp file
-%make a timestamp file from the first file's first correct nosepoke
-file = 1;
-
-%find the ind of the first correct np
-[timeind] = find(data{file,5}(:,4)==1,1,'first');
-timestampfile = data{file,5}(timeind-610:timeind+1221,1)-data{file,5}(timeind,1);
-
-xlswrite(timestampfolder,timestampfile);
-
-
-%% Save data in file
-%just rawtogether and names
-save(FP_MATLAB_VARS_FILENAME, 'rawtogether', 'filenames', '-v7.3');
 
 %% Print code version text file
 

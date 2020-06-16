@@ -17,7 +17,7 @@ clear;
 
 % Make sure to change this directory to the parent folder of this pipeline.
 % e.g.: 'C:\Users\rbc52\Documents\MATLAB\Crouse et al\2019-06'
-FP_PARENT_DIRECTORY = 'C:\Users\rbc52\Google Drive\Grad School\Picciotto Lab Data\Crouse et al MATLAB\2019-06 BLA ACh3.0';
+FP_PARENT_DIRECTORY = 'D:\Picciotto Lab Stuff\Crouse et al v2\Crouse et al v2\Crouse et al MATLAB Outputs and Raw\2019-06 BLA ACh3.0';
 
 %if FP_PARENT_DIRECTORY wasn't designated, stop script and alert the user
 if isempty(FP_PARENT_DIRECTORY)
@@ -26,8 +26,8 @@ if isempty(FP_PARENT_DIRECTORY)
 end
 
 
-FP_OUTPUT_DIRECTORY = [ FP_PARENT_DIRECTORY '\output' ];
-FP_RAW_DIRECTORY = [ FP_PARENT_DIRECTORY '\raw' ];
+FP_OUTPUT_DIRECTORY = [ FP_PARENT_DIRECTORY '\generated output' ];
+FP_RAW_DIRECTORY = [ FP_PARENT_DIRECTORY '\raw partial' ];
 FP_PROC_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated processed'];
 FP_COMPILE_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated individual events by day' ];
 FP_COMPILE_REF_SIG_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated individual events by day Reference vs Signal' ];
@@ -53,14 +53,14 @@ Fig_2B_S2_2A_summary_2019_06
 
 Basic_FP_processing
 
-FP_Compile_2019_06_v1
+FP_Compile_2019_06
 
-FP_Compile_2019_06_v1_ref
+FP_Compile_2019_06_ref
 
-FP_Compile_2019_06_v1_sig
+FP_Compile_2019_06_sig
 
-Mean_SEM_calc_indiv_plots_v3
+Mean_SEM_calc_indiv_plots
 
-Actions_heatmaps_all_phases_v4_1_pub
+Actions_heatmaps_all_phases_pub
 	
-Tone_poke_rec_heatmaps_by_mouse_v2_1
+Tone_poke_rec_heatmaps_by_mouse
