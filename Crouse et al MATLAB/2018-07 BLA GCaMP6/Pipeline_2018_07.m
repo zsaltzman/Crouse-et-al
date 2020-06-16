@@ -17,7 +17,7 @@ clear;
 
 % Make sure to change this directory to the parent folder of this pipeline.
 % e.g.: 'C:\Users\rbc52\Documents\MATLAB\Crouse et al\2019-06'
-FP_PARENT_DIRECTORY = 'C:\Users\rbc52\Google Drive\Grad School\Picciotto Lab Data\Crouse et al MATLAB\2018-07 BLA GCaMP6';
+FP_PARENT_DIRECTORY = 'D:\Picciotto Lab Stuff\Crouse et al v2\Crouse et al v2\Crouse et al MATLAB Outputs and Raw\2018-07 BLA GCaMP6';
 
 %if FP_PARENT_DIRECTORY wasn't designated, stop script and alert the user
 if isempty(FP_PARENT_DIRECTORY)
@@ -26,12 +26,12 @@ if isempty(FP_PARENT_DIRECTORY)
 end
 
 
-FP_OUTPUT_DIRECTORY = [ FP_PARENT_DIRECTORY '\output' ];
-FP_RAW_DIRECTORY = [ FP_PARENT_DIRECTORY '\raw' ];
+FP_OUTPUT_DIRECTORY = [ FP_PARENT_DIRECTORY '\generated output' ];
+FP_RAW_DIRECTORY = [ FP_PARENT_DIRECTORY '\raw subset' ];
 FP_PROC_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated processed' ];
 FP_COMPILE_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated individual events by day' ];
 FP_COMPILE_REF_SIG_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated individual events by day Reference vs Signal' ];
-FP_MEDPC_FILE = [ FP_PARENT_DIRECTORY '\2018-07 MedPC Full.xlsx' ];
+FP_MEDPC_FILE = [ FP_PARENT_DIRECTORY '\2018-07 MedPC Partial.xlsx' ];
 FP_TIMESTAMP_FILE = [ FP_OUTPUT_DIRECTORY '\pipeline_2018_07 timestamps.xlsx' ];
 
 FP_SUMMARY_DIRECTORY =  [ FP_OUTPUT_DIRECTORY '\generated event summary graphs' ];
@@ -48,18 +48,18 @@ save(getPipelineVarsFilename);
 MDIR_DIRECTORY_NAME = FP_OUTPUT_DIRECTORY;
 make_directory
 
-Fig_3C_S3_2A_summary_2018_07
+%Fig_3C_S3_2A_summary_2018_07
 
-Basic_FP_processing
+%Basic_FP_processing
 
-FP_Compile_2018_07_v1 
+%FP_Compile_2018_07 
 
-FP_Compile_2018_07_v1_ref
+FP_Compile_2018_07_ref
 
-FP_Compile_2018_07_v1_sig
+FP_Compile_2018_07_sig
 
-Mean_SEM_calc_indiv_plots_v3
+Mean_SEM_calc_indiv_plots
 
-Actions_heatmaps_all_phases_v4_1_pub
+Actions_heatmaps_all_phases_pub
 
-Tone_poke_rec_heatmaps_by_mouse_v2_1
+Tone_poke_rec_heatmaps_by_mouse
