@@ -46,18 +46,18 @@ save(getPipelineVarsFilename);
 MDIR_DIRECTORY_NAME = FP_OUTPUT_DIRECTORY;
 make_directory
 
-Fig_2G_S2_4A_summary_2019_14
+Fig_2G_S2_4A_summary_2019
 
-Basic_FP_processing_2019_14_v4
+Basic_FP_processing_2019_14
 
-FP_Compile_2019_14_v3
+FP_Compile_2019_14
         
-FP_Compile_2019_14_v3_ref
+FP_Compile_2019_14_ref
 
-FP_Compile_2019_14_v3_sig
+FP_Compile_2019_14_sig
 
-Mean_SEM_calc_indiv_plots_v5
+Mean_SEM_calc_indiv_plots
 
-Actions_heatmaps_all_phases_v4_2_pub
+Actions_heatmaps_all_phases_pub
 
-Tone_poke_rec_heatmaps_by_mouse_v3_1_pub
+Tone_poke_rec_heatmaps_by_mouse_pub
