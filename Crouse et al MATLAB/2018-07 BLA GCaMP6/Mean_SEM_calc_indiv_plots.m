@@ -50,11 +50,11 @@ for ii = 1:length(C)
     
     % Read in the data
     else    
-    [~,sheets] = xlsfinfo(fullname);
+    sheets = sheetnames(fullname);
     
-        for sheetsidx = 3:size(sheets,2)
+        for sheetsidx = 2:length(sheets)
             graphdataidx=find(strcmpi(sheets{sheetsidx},variables));
-            graphdata{ii,graphdataidx} = xlsread(fullname,sheets{sheetsidx});
+            graphdata{ii,graphdataidx} = readmatrix(fullname, 'Sheet', sheets{sheetsidx});
         end
     
     end
@@ -63,7 +63,7 @@ end
 
 
 %import timestamp
-time = xlsread(timestampfile);
+time = readmatrix(timestampfile);
 
 %% Calculate averages and sems
 
