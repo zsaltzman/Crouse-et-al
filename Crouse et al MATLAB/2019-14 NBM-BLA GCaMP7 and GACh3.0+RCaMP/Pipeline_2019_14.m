@@ -17,7 +17,7 @@ clear;
 
 % Make sure to change this directory to the parent folder of this pipeline.
 % e.g.: 'C:\Users\rbc52\Documents\MATLAB\Crouse et al\2019-06'
-FP_PARENT_DIRECTORY = 'C:\Users\rbc52\Google Drive\Grad School\Picciotto Lab Data\Crouse et al MATLAB\2019-14 NBM-BLA GCaMP7 and GACh3.0+RCaMP';
+FP_PARENT_DIRECTORY = 'D:\Picciotto Lab Stuff\Crouse et al v2\Crouse et al v2\Crouse et al MATLAB Outputs and Raw\2019-14 NBM-BLA GCaMP7 and GACh3.0+RCaMP';
 
 %if FP_PARENT_DIRECTORY wasn't designated, stop script and alert the user
 if isempty(FP_PARENT_DIRECTORY)
@@ -26,12 +26,12 @@ if isempty(FP_PARENT_DIRECTORY)
 end
 
 
-FP_OUTPUT_DIRECTORY = [ FP_PARENT_DIRECTORY '\output' ];
-FP_RAW_DIRECTORY = [ FP_PARENT_DIRECTORY '\raw' ];
+FP_OUTPUT_DIRECTORY = [ FP_PARENT_DIRECTORY '\generated output' ];
+FP_RAW_DIRECTORY = [ FP_PARENT_DIRECTORY '\raw partial' ];
 FP_PROC_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated processed' ];
 FP_COMPILE_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated individual events by day' ];
 FP_COMPILE_REF_SIG_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated individual events by day Reference vs Signal' ];
-FP_MEDPC_FILE = [ FP_PARENT_DIRECTORY '\2019-14 MedPC Full.xlsx' ]; % Took a day I didn't have data for out
+FP_MEDPC_FILE = [ FP_PARENT_DIRECTORY '\2019-14 MedPC Partial.xlsx' ]; % Took a day I didn't have data for out
 FP_TIMESTAMP_FILE = [ FP_OUTPUT_DIRECTORY '\pipeline_2019_14 timestamps.xlsx' ];
 
 FP_SUMMARY_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated event summary graphs' ];
@@ -46,7 +46,7 @@ save(getPipelineVarsFilename);
 MDIR_DIRECTORY_NAME = FP_OUTPUT_DIRECTORY;
 make_directory
 
-Fig_2G_S2_4A_summary_2019
+Fig_2G_S2_4A_summary_2019_14
 
 Basic_FP_processing_2019_14
 
