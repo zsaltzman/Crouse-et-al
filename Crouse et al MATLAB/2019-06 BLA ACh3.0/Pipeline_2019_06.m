@@ -31,7 +31,7 @@ FP_RAW_DIRECTORY = [ FP_PARENT_DIRECTORY '\raw partial' ];
 FP_PROC_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated processed'];
 FP_COMPILE_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated individual events by day' ];
 FP_COMPILE_REF_SIG_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated individual events by day Reference vs Signal' ];
-FP_MEDPC_FILE = [ FP_PARENT_DIRECTORY '\2019-06 MedPC Full.xlsx' ]; 
+FP_MEDPC_FILE = [ FP_PARENT_DIRECTORY '\2019-06 MedPC Partial.xlsx' ]; 
 FP_TIMESTAMP_FILE = [ FP_OUTPUT_DIRECTORY '\pipeline_2019_06 timestamps.xlsx' ];
 
 FP_SUMMARY_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated event summary graphs' ];

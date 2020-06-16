@@ -526,7 +526,7 @@ file = 1;
 [timeind] = find(data{file,5}(:,4)==1,1,'first');
 timestampfile = data{file,5}(timeind-610:timeind+1221,1)-data{file,5}(timeind,1);
 
-writematrix(timestampfolder,timestampfile);
+writematrix(timestampfile, timestampfolder);
 
 
 %% Save data in file
