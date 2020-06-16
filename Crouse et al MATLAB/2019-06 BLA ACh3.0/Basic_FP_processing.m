@@ -25,7 +25,7 @@ for file = files'
       continue
   end
    
-  allData = csvread([directory,'\' filename],2,0); % 1: skip first two lines since they are headers
+  allData = readmatrix([directory,'\' filename]); % reading in just numeric lines, therefore skipping the headers
   firstLine = find(allData(:,1) > 0.1, 1); % Everything before ~100 ms is noise from the lock-in filter calculation; it sounds like this is default in the correction we get wqhen we extract DF/F0
   data = allData(firstLine:end, :); 
   
