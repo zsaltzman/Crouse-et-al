@@ -46,9 +46,9 @@ save(getPipelineVarsFilename);
 MDIR_DIRECTORY_NAME = FP_OUTPUT_DIRECTORY;
 make_directory
 
-% Fig_2G_S2_4A_summary_2019_14
+Fig_2G_S2_4A_summary_2019_14
 
-% Basic_FP_processing_2019_14
+Basic_FP_processing_2019_14
 
 FP_Compile_2019_14
         
