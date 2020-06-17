@@ -32,7 +32,7 @@ make_directory;
 skips = ["0849 Timeout Day 09"; "0849 Timeout Day 11"; "0856 ZExtinction Day 01"];
 
 %% Import timestamp
-time = xlsread(timestampfile);
+time = readmatrix(timestampfile);
 
 
 %% read data
@@ -65,25 +65,25 @@ for file = 1:length(filenames)
         
         % Read in the data
     else
-        [~,sheets] = xlsfinfo(fullname);
+        sheets = sheetnames(fullname);
         
         %loop through all sheets, find the sheets whose name match one of
         %the variables. Pull that sheet and put it in graphdata in the col
         %that matches the idx of the var name in the variable string (e.g.
         %correct is col 1). If an rcamp mouse, pull the r_ sheet and put it
         %in r_graphdata
-        for sheetsidx = 1:size(sheets,2)
+        for sheetsidx = 1:length(sheets)
             if any(strcmpi(sheets{sheetsidx},variables))
                 %fix checking of mouse number, maybe change it to just making
                 %a new r_graphdata variable
                 
                 graphdataidx=find(strcmpi(sheets{sheetsidx},variables));
-                graphdata{file,graphdataidx} = xlsread(fullname,sheets{sheetsidx});
+                graphdata{file,graphdataidx} = readmatrix(fullname, 'Sheet', sheets{sheetsidx});
                 
                 %if it's an rcamp mouse, grab the corresponding r_ var 8 idx's
                 %away
                 if str2double(datanames{file,1}{1}(8:11)) == 849 || str2double(datanames{file,1}{1}(8:11)) == 850
-                    r_graphdata{file,graphdataidx} = xlsread(fullname,['r_' sheets{sheetsidx}]);
+                    r_graphdata{file,graphdataidx} = readmatrix(fullname, 'Sheet', ['r_' sheets{sheetsidx}]);
                 end
                 
             end

@@ -52,8 +52,9 @@ filenames = filenames(~startsWith(filenames,'~'));
 raw = cell(length(filenames),1);
 
 %how_many_mice/loopvalue switch component
+% Changed same as in ref. -Zach
 if strcmp(how_many_mice, 'selection')
-    loopvalue = 31;
+    loopvalue = 3;
 elseif strcmp(how_many_mice, 'all')
     loopvalue = 1:length(filenames);
 end
@@ -65,7 +66,7 @@ for ii = loopvalue
     
     % Read in the data (headers included b/c the
     raw{ii,1} = filenames(ii);
-    [~,~,raw{ii,2}] = xlsread(fullname);
+    raw{ii,2} = readcell(fullname);
 end
 
 %add file names to data's first col
@@ -74,7 +75,7 @@ data = raw(:,1);
 
 %how_many_mice/loopvalue switch component
 if strcmp(how_many_mice, 'selection')
-    loopvalue = 31;
+    loopvalue = 3;
 elseif strcmp(how_many_mice, 'all')
     loopvalue = 1:size(raw,1);
 end
@@ -121,7 +122,7 @@ for row = 1:size(data,1)
 end
     
 %% Import the data
-[~, ~, medrawpresort] = xlsread(medpcfile);
+medrawpresort = readcell(medpcfile);
 %only imported Cued and CuedTO
 
 %cut off column headings and sort by animal ID, ascending order
@@ -135,13 +136,13 @@ medrawpresort = medrawpresort(2:end,:);
 medraw = medrawpresort(sortidx,:);
 
 % only keep the cued days for 849 and 850
-medraw = [ medraw(1:4, :); medraw(20:23, :); medraw(39:76, :) ];
+% medraw = [ medraw(1:4, :); medraw(20:23, :); medraw(39:76, :) ];
 clear medrawpresort;
 
 
 %how_many_mice/loopvalue switch component
 if strcmp(how_many_mice, 'selection')
-    loopvalue = 31;
+    loopvalue = 3;
 elseif strcmp(how_many_mice, 'all')
     loopvalue = 1:size(medraw,1);
 end
@@ -250,7 +251,7 @@ clear raw_mouse medraw
 
 %how_many_mice/loopvalue switch component
 if strcmp(how_many_mice, 'selection')
-    loopvalue = 31;
+    loopvalue = 3;
 elseif strcmp(how_many_mice, 'all')
     loopvalue = 1:size(data,1);
 end
@@ -393,7 +394,7 @@ cut_short = [" ";];
 
 %how_many_mice/loopvalue switch component
 if strcmp(how_many_mice, 'selection')
-    loopvalue = 31;
+    loopvalue = 3;
 elseif strcmp(how_many_mice, 'all')
     loopvalue = 1:size(data,1);
 end
@@ -611,51 +612,50 @@ for file = loopvalue
     
     %if rcamp mouse, write both vars together to save time 
     if str2double(data{file,1}{1}(11:14)) == 849 || str2double(data{file,1}{1}(11:14)) == 850
-        
-                if correctcounter ~= 0
-            writematrix(correct, outputname, "Sheet", 'correct');
-            writematrix(r_correct, outputname, "Sheet", 'r_correct');
+        if correctcounter ~= 0
+            writematrix(correct, outputname, 'Sheet', 'correct');
+            writematrix(r_correct, outputname, 'Sheet', 'r_correct');
         end
         
         if tonecounter ~= 0
-            writematrix(tone, outputname, "Sheet", 'tone');
-            writematrix(outputname, r_tone, "Sheet",'r_tone');
+            writematrix(tone, outputname, 'Sheet', 'tone');
+            writematrix(r_tone, outputname, 'Sheet', 'r_tone');
         end
         
         if incorrectcounter ~= 0
-            writematrix( incorrect, outputname, "Sheet",'incorrect');
-            writematrix(r_incorrect,outputname, "Sheet",'r_incorrect');
+            writematrix(incorrect, outputname, 'Sheet', 'incorrect');
+            writematrix(r_incorrect, outputname, 'Sheet', 'r_incorrect');
         end
         
         if receptaclecounter ~= 0
-            writematrix(receptacle,outputname, "Sheet",'receptacle');
-            writematrix(r_receptacle, outputname,"Sheet",'r_receptacle');
+            writematrix(receptacle, outputname, 'Sheet', 'receptacle');
+            writematrix(r_receptacle, outputname, 'Sheet', 'r_receptacle');
         end
         
         if randreccounter ~= 0
-            writematrix(randrec,outputname, "Sheet",'randrec');
-            writematrix(r_randrec,outputname, "Sheet",'r_randrec');
+            writematrix(randrec, outputname, 'Sheet', 'randrec');
+            writematrix(r_randrec, outputname, 'Sheet', 'r_randrec');
         end
         
         if tonehitcounter ~= 0
-            writematrix(tonehit,outputname, "Sheet",'tonehit');
-            writematrix(r_tonehit,outputname, "Sheet",'r_tonehit');
+            writematrix(tonehit, outputname, 'Sheet', 'tonehit');
+            writematrix(r_tonehit, outputname, 'Sheet', 'r_tonehit');
         end
         
         if tonemisscounter ~= 0
-            writematrix(tonemiss,outputname, "Sheet",'tonemiss');
-            writematrix(r_tonemiss,outputname, "Sheet",'r_tonemiss');
+            writematrix(tonemiss, outputname, 'Sheet', 'tonemiss');
+            writematrix(r_tonemiss, outputname, 'Sheet', 'r_tonemiss');
         end
         
         if inactivecounter ~= 0
-            writematrix(inactive,outputname, "Sheet",'inactive');
-            writematrix(r_inactive,outputname, "Sheet",'r_inactive');
+            writematrix(inactive, outputname, 'Sheet', 'inactive');
+            writematrix(r_inactive, outputname, 'Sheet', 'r_inactive');
         end
         
  
     else %if not rcamp mouse
         
-        if correctcounter ~= 0
+       if correctcounter ~= 0
             writematrix(correct, outputname, "Sheet", 'correct');
         end
         
@@ -686,6 +686,7 @@ for file = loopvalue
         if inactivecounter ~= 0
             writematrix(inactive,outputname, "Sheet",'inactive');
         end
+        
         
     end
     %it to the data cell

@@ -27,8 +27,8 @@ for file = files'
         fprintf('Skipping %s\n', filename);
         continue
     end
-    
-    allData = csvread([directory,'\' filename],2,0); % 1: skip first two lines line (header); might need to skip more depeding how the file but basically the goal is to scrap the headers.
+     
+    allData = readmatrix([directory,'\' filename]); % reading in just numeric lines, therefore skipping the headers the file but basically the goal is to scrap the headers.
     firstLine = find(allData(:,1) > 0.1, 1); % Everything before ~100 ms is noise from the lock-in filter calculation; it sounds like this is default in the correction we get wqhen we extract DF/F0
     data = allData(firstLine:end, :);
     

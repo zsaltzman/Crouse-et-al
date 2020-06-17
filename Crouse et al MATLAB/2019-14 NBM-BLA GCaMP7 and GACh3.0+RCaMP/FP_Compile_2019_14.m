@@ -48,7 +48,7 @@ for ii = 1:length(filenames)
     
     % Read in the data (headers included b/c the
     raw{ii,1} = filenames(ii);
-    [~,~,raw{ii,2}] = xlsread(fullname);
+    raw{ii,2} = readcell(fullname);
 end
 
 %add file names to data's first col
@@ -97,7 +97,7 @@ for row = 1:size(data,1)
 end
     
 %% Import the data
-[~, ~, medrawpresort] = xlsread(medpcfile);
+medrawpresort = readcell(medpcfile);
 %only imported Cued and CuedTO
 
 %cut off column headings and sort by animal ID, ascending order
@@ -111,7 +111,7 @@ medrawpresort = medrawpresort(2:end,:);
 medraw = medrawpresort(sortidx,:);
 
 % only keep the cued days for 849 and 850
-medraw = [ medraw(1:4, :); medraw(20:23, :); medraw(39:76, :) ];
+% medraw = [ medraw(1:4, :); medraw(20:23, :); medraw(39:76, :) ];
 clear medrawpresort;
 
 %cycle through each mouse
@@ -573,84 +573,84 @@ for file = 1:size(data,1)
     %inidividual actions. Now also adding a variable "together"
     outputname = [outputfolder '\MATLAB_' data{file,1}{1}(11:end-6) '.xlsx'];
    
-    xlswrite(outputname, actioncounter, 'counter');
+    writecell(actioncounter, outputname, 'Sheet', 'counter');
     
     %if rcamp mouse, write both vars together to save time 
     if str2double(data{file,1}{1}(11:14)) == 849 || str2double(data{file,1}{1}(11:14)) == 850
         
         if correctcounter ~= 0
-            xlswrite(outputname, correct, 'correct');
-            xlswrite(outputname, r_correct, 'r_correct');
+            writematrix(correct, outputname, 'Sheet', 'correct');
+            writematrix(r_correct, outputname, 'Sheet', 'r_correct');
         end
         
         if tonecounter ~= 0
-            xlswrite(outputname, tone, 'tone');
-            xlswrite(outputname, r_tone, 'r_tone');
+            writematrix(tone, outputname, 'Sheet', 'tone');
+            writematrix(r_tone, outputname, 'Sheet', 'r_tone');
         end
         
         if incorrectcounter ~= 0
-            xlswrite(outputname, incorrect, 'incorrect');
-            xlswrite(outputname, r_incorrect, 'r_incorrect');
+            writematrix(incorrect, outputname, 'Sheet', 'incorrect');
+            writematrix(r_incorrect, outputname, 'Sheet', 'r_incorrect');
         end
         
         if receptaclecounter ~= 0
-            xlswrite(outputname, receptacle, 'receptacle');
-            xlswrite(outputname, r_receptacle, 'r_receptacle');
+            writematrix(receptacle, outputname, 'Sheet', 'receptacle');
+            writematrix(r_receptacle, outputname, 'Sheet', 'r_receptacle');
         end
         
         if randreccounter ~= 0
-            xlswrite(outputname, randrec, 'randrec');
-            xlswrite(outputname, r_randrec, 'r_randrec');
+            writematrix(randrec, outputname, 'Sheet', 'randrec');
+            writematrix(r_randrec, outputname, 'Sheet', 'r_randrec');
         end
         
         if tonehitcounter ~= 0
-            xlswrite(outputname, tonehit, 'tonehit');
-            xlswrite(outputname, r_tonehit, 'r_tonehit');
+            writematrix(tonehit, outputname, 'Sheet', 'tonehit');
+            writematrix(r_tonehit, outputname, 'Sheet', 'r_tonehit');
         end
         
         if tonemisscounter ~= 0
-            xlswrite(outputname, tonemiss, 'tonemiss');
-            xlswrite(outputname, r_tonemiss, 'r_tonemiss');
+            writematrix(tonemiss, outputname, 'Sheet', 'tonemiss');
+            writematrix(r_tonemiss, outputname, 'Sheet', 'r_tonemiss');
         end
         
         if inactivecounter ~= 0
-            xlswrite(outputname, inactive, 'inactive');
-            xlswrite(outputname, r_inactive, 'r_inactive');
+            writematrix(inactive, outputname, 'Sheet', 'inactive');
+            writematrix(r_inactive, outputname, 'Sheet', 'r_inactive');
         end
         
  
     else %if not rcamp mouse
         
-        if correctcounter ~= 0
-            xlswrite(outputname, correct, 'correct');
+if correctcounter ~= 0
+            writematrix(correct, outputname, "Sheet", 'correct');
         end
         
         if tonecounter ~= 0
-            xlswrite(outputname, tone, 'tone');
+            writematrix(tone, outputname, "Sheet", 'tone');
         end
         
         if incorrectcounter ~= 0
-            xlswrite(outputname, incorrect, 'incorrect');
+            writematrix( incorrect, outputname, "Sheet",'incorrect');
         end
         
         if receptaclecounter ~= 0
-            xlswrite(outputname, receptacle, 'receptacle');
+            writematrix(receptacle,outputname, "Sheet",'receptacle');
         end
         
         if randreccounter ~= 0
-            xlswrite(outputname, randrec, 'randrec');
+            writematrix(randrec,outputname, "Sheet",'randrec');
         end
         
         if tonehitcounter ~= 0
-            xlswrite(outputname, tonehit, 'tonehit');
+            writematrix(tonehit,outputname, "Sheet",'tonehit');
         end
         
         if tonemisscounter ~= 0
-            xlswrite(outputname, tonemiss, 'tonemiss');
+            writematrix(tonemiss,outputname, "Sheet",'tonemiss');
         end
         
         if inactivecounter ~= 0
-            xlswrite(outputname, inactive, 'inactive');
+            writematrix(inactive,outputname, "Sheet",'inactive');
         end
         
     end
@@ -666,7 +666,7 @@ file = 1;
 %correct (reward delivery prop only)
 
 timestampfile = data{file,5}(timeind-610:timeind+1221,1)-data{file,5}(timeind,1);
-xlswrite(timestampfolder,timestampfile)
+writematrix(timestampfile,timestampfolder)
 
 %% Save data in file
 
