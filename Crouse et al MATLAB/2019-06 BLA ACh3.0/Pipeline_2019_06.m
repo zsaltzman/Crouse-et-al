@@ -27,11 +27,11 @@ end
 
 
 FP_OUTPUT_DIRECTORY = [ FP_PARENT_DIRECTORY '\generated output' ];
-FP_RAW_DIRECTORY = [ FP_PARENT_DIRECTORY '\raw partial' ];
+FP_RAW_DIRECTORY = [ FP_PARENT_DIRECTORY '\raw' ];
 FP_PROC_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated processed'];
 FP_COMPILE_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated individual events by day' ];
 FP_COMPILE_REF_SIG_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated individual events by day Reference vs Signal' ];
-FP_MEDPC_FILE = [ FP_PARENT_DIRECTORY '\2019-06 MedPC Partial.xlsx' ]; 
+FP_MEDPC_FILE = [ FP_PARENT_DIRECTORY '\2019-06 MedPC Full.xlsx' ]; 
 FP_TIMESTAMP_FILE = [ FP_OUTPUT_DIRECTORY '\pipeline_2019_06 timestamps.xlsx' ];
 
 FP_SUMMARY_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated event summary graphs' ];
@@ -40,6 +40,8 @@ FP_SUMMARY_TP_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated summary_tone_poke_re
 FP_MATLAB_VARS = [ FP_OUTPUT_DIRECTORY '\MATLAB intermediate variables'];
 FP_MATLAB_VARS_FILENAME = [ FP_MATLAB_VARS '\rawandnamesonly.mat' ];
 FP_INDIVIDUAL_DAY_DATA_FILENAME = [ FP_MATLAB_VARS '\day_graph_data.mat' ];
+
+FP_BCI_PARENT_FOLDER = [ FP_OUTPUT_DIRECTORY '\generated bci graphs' ];
 
 % This should be the root folder of your study and this should be the ONLY
 % Matlab variable file in the root directory
@@ -64,3 +66,5 @@ Mean_SEM_calc_indiv_plots
 Actions_heatmaps_all_phases_pub
 	
 Tone_poke_rec_heatmaps_by_mouse
+
+calc_bCI

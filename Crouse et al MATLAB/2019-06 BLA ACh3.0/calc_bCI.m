@@ -5,7 +5,7 @@ alpha = 1; % Error rate
 resamples = 1000; % Number of times to bootstrap
 sig = alpha / 100; % percentile alpha given to boot_CI
 fs = 122.15; % Close estimation to a sampling frequency that would correspond to 1832 data points for 15 seconds
-activity_threshold = 0.7 * fs; % 2018-07 uses a slightly higher activity threshold due to flatter device kinetics (signal gets 'leakily integrated' over time)
+activity_threshold = 0.3 * fs; % 2019-06 has faster device kinetics so it uses a low threshold for activity
 
 % Removed this from release versions, though it can be trivially re-added
 % high_salience_timeframe = 0.25;

@@ -41,23 +41,27 @@ FP_MATLAB_VARS = [FP_OUTPUT_DIRECTORY '\MATLAB intermediate variables'];
 FP_MATLAB_VARS_FILENAME = [ FP_MATLAB_VARS '\rawandnamesonly.mat'];
 FP_INDIVIDUAL_DAY_DATA_FILENAME = [ FP_MATLAB_VARS '\day_graph_data.mat' ];
 
+FP_BCI_PARENT_FOLDER = [ FP_OUTPUT_DIRECTORY '\generated bci graphs' ];
+
 save(getPipelineVarsFilename);
 
 MDIR_DIRECTORY_NAME = FP_OUTPUT_DIRECTORY;
 make_directory
 
-Fig_2G_S2_4A_summary_2019_14
+% Fig_2G_S2_4A_summary_2019_14
+% 
+% Basic_FP_processing_2019_14
+% 
+% FP_Compile_2019_14
+%         
+% FP_Compile_2019_14_ref
+% 
+% FP_Compile_2019_14_sig
+% 
+% Mean_SEM_calc_indiv_plots
+% 
+% Actions_heatmaps_all_phases_pub
+% 
+% Tone_poke_rec_heatmaps_by_mouse_pub
 
-Basic_FP_processing_2019_14
-
-FP_Compile_2019_14
-        
-FP_Compile_2019_14_ref
-
-FP_Compile_2019_14_sig
-
-Mean_SEM_calc_indiv_plots
-
-Actions_heatmaps_all_phases_pub
-
-Tone_poke_rec_heatmaps_by_mouse_pub
+calc_bCI

@@ -41,6 +41,8 @@ FP_MATLAB_VARS = [ FP_OUTPUT_DIRECTORY '\MATLAB intermediate variables' ];
 FP_MATLAB_VARS_FILENAME = [ FP_MATLAB_VARS '\rawandnamesonly.mat' ];
 FP_INDIVIDUAL_DAY_DATA_FILENAME = [ FP_MATLAB_VARS '\individual_day_graph_data.mat' ];
 
+FP_BCI_PARENT_FOLDER = [ FP_OUTPUT_DIRECTORY '\generated bci graphs' ];
+
 % This should be the root folder of your study and this should be the ONLY
 % Matlab variable file in the root directory
 save(getPipelineVarsFilename); 
@@ -48,18 +50,20 @@ save(getPipelineVarsFilename);
 MDIR_DIRECTORY_NAME = FP_OUTPUT_DIRECTORY;
 make_directory
 
-Fig_3C_S3_2A_summary_2018_07
+% Fig_3C_S3_2A_summary_2018_07
 
-Basic_FP_processing
+% Basic_FP_processing
 
-FP_Compile_2018_07 
+% FP_Compile_2018_07 
 
-FP_Compile_2018_07_ref
+% FP_Compile_2018_07_ref
 
-FP_Compile_2018_07_sig
+% FP_Compile_2018_07_sig
 
-Mean_SEM_calc_indiv_plots
+% Mean_SEM_calc_indiv_plots
 
-Actions_heatmaps_all_phases_pub
+% Actions_heatmaps_all_phases_pub
 
-Tone_poke_rec_heatmaps_by_mouse
+% Tone_poke_rec_heatmaps_by_mouse
+
+calc_bCI
