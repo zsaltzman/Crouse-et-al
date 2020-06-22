@@ -65,7 +65,7 @@ for ii = loopvalue
     
     % Read in the data (headers included b/c the
     raw{ii,1} = filenames(ii);
-    [~,~,raw{ii,2}] = xlsread(fullname);
+    raw{ii,2} = readcell(fullname);
 end
 
 %add file names to data's first col
@@ -121,7 +121,7 @@ for row = 1:size(data,1)
 end
     
 %% Import the data
-[~, ~, medrawpresort] = xlsread(medpcfile);
+medrawpresort = readcell(medpcfile);
 %only imported Cued and CuedTO
 
 %cut off column headings and sort by animal ID, ascending order
@@ -135,7 +135,7 @@ medrawpresort = medrawpresort(2:end,:);
 medraw = medrawpresort(sortidx,:);
 
 % only keep the cued days for 849 and 850
-medraw = [ medraw(1:4, :); medraw(20:23, :); medraw(39:76, :) ];
+% medraw = [ medraw(1:4, :); medraw(20:23, :); medraw(39:76, :) ];
 clear medrawpresort;
 
 
