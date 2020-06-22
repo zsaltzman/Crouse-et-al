@@ -4,8 +4,8 @@ clear;
 
 
 %% Experiment Specifics
-folder = 'C:\Users\rbc52\Google Drive\Grad School\Picciotto Lab Data\2020-04 FP\';
-outputfolder = 'C:\Users\rbc52\Google Drive\Grad School\Picciotto Lab Data\2020-04 FP\MATLAB Output\';
+folder = FP_PARENT_DIRECTORY;
+outputfolder = FP_OUTPUT_DIRECTORY;
 
 %exp = Figs
 exp = '2020-04 MedPC Summary';

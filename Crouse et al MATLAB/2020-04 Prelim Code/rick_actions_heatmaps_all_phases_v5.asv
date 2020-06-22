@@ -31,8 +31,7 @@
 
 
 %% clear
-clear;
-load(getPipelineVarsFilename);
+clear
 
 % exp = '2018-07';
 exp = '2020-04';
@@ -45,7 +44,7 @@ load(FP_INDIVIDUAL_DAY_DATA_FILENAME)
 
 
 outputfolder = FP_SUMMARY_DIRECTORY;
-timestampfile = FP_TIMESTAMP_FILE;
+timestampfile = FP_TIMESTAMP_FILE';
 outputfile = 'MATLAB means+sem for prism';
 
 MDIR_DIRECTORY_NAME = outputfolder;
@@ -246,7 +245,9 @@ for num = 1:size(all_mouse_ID,1)
         eval(['heatnumbers =' variables{idx} ';']);
         heatnumbers = heatnumbers';
         
-      
+        %variables = ["correct" "tone" "incorrect" "receptacle" "randrec" "tonehit" "tonemiss" "inactive"];
+        
+        
         %if statement to change clims based on indicator
         if any(mouse_ID == gach)
             indicator = 'GACh';
@@ -319,16 +320,60 @@ for num = 1:size(all_mouse_ID,1)
             yline(Ext-0.5, 'LineWidth', 1.75);
         end
         
+        %bring back in and mod when needed
+        %TO and Ext change based on when the different phases happened
         
+        %         %lines to draw/label if BLA_GACh
+        %         if any(mouse_ID == BLA_GACh)
+        %             ax.YTick = [0.5 TO-0.5 rew_thresh_day - 0.5  Ext-0.5];
+        %             yline(TO-0.5, 'LineWidth', 1.75)
+        %             yline(Ext-0.5, 'LineWidth', 1.75)
+        %             yline(rew_thresh_day - 0.5 , 'w', 'LineWidth', 1.75)
+        %
+        %             ax.YTickLabel = {'Cued', 'TO', 'Acq.','Ext.'};
+        %
+        %             %lines to draw/label for non-BLA_GACh
+        %
+        %         elseif mouse_ID == 3 || mouse_ID ==4
+        %             %             ax.YTick = [0.5 TO-0.5 rew_thresh_day - 0.5  Ext-0.5];
+        %             yline(TO-0.5, 'LineWidth', 1.25)
+        %             yline(Ext-0.5, 'LineWidth', 1.25)
+        %             yline(rew_thresh_day - 0.5 , 'w', 'LineWidth', 1.25)
+        %
+        %             %             ax.YTickLabel = {'Cued', 'TO', 'Acq.','Ext.'};
+        %
+        %
+        %         else
+        %             ax.YTick = [0.5 TO-0.5 Ext-0.5];
+        %             yline(TO-0.5, 'LineWidth', 1.25)
+        %             yline(Ext-0.5, 'LineWidth', 1.25)
+        %
+        %             ax.YTickLabel = {'Cued', 'TO', 'Ext'};
+        %
+        %         end
+        %
+        
+        
+        set(gca,'YDir','normal')
+        
+        %remove yticks and yticklabels
+        %         set(gca,'ytick',[])
+        %         set(gca,'yticklabel',[])
+        
+        %remove title
+        %                 title([ indicator ' ' num2str(mouse_ID) ' ' variables{idx}],'fontsize',16)
+        
+        
+        %         ylabel('Training Day','fontsize',16)
+        %         xlabel('Seconds from event onset','fontsize',16)
         cb = colorbar;
         ylabel(cb, 'Z %\DeltaF/F0' ,'fontsize',16)
         xticks([-4:2:4]);
         
-        sname = [ outputfolder '\' indicator ];
-        MDIR_DIRECTORY_NAME = [ outputfolder '\' indicator ];
-        make_directory;
         
-        print([sname  '\' indicator ' ' num2str(mouse_ID) ' ' variables{idx}], '-dpng');
+        
+        
+        print([outputfolder '\' indicator  '\' indicator ' ' num2str(mouse_ID) ' ' variables{idx}], '-dpng');
         
         
         close all
@@ -353,6 +398,71 @@ for num = 1:size(all_mouse_ID,1)
 end
 
 %% plot collapsed
+
+% if any(mouse_ID == BLA_GACh)
+
+% %% Plot collapsed across mice (expanded collapse days)
+% 
+% 
+% %     climits = [-2 6];
+% 
+% mean_Cued_day_1 = nanmean(Cued_day_1_all_mice,2);
+% mean_Cued_day_4 = nanmean(Cued_day_4_all_mice,2);
+% mean_TO_day_01 = nanmean(TO_day_01_day_all_mice,2);
+% mean_TO_day_03 = nanmean(TO_day_03_day_all_mice,2);
+% %     mean_TO_10 = nanmean(TO_10_rew_day_all_mice,2);
+% mean_TO_day_06 = nanmean(TO_day_06_day_all_mice,2);
+% %     mean_TO_day_15 = nanmean(TO_day_15_day_all_mice,2);
+% mean_rew_thresh = nanmean(rew_thresh_all_mice,2);
+% mean_TO_Last = nanmean(TO_Last_day_all_mice,2);
+% mean_Ext = nanmean(Ext_Day_day_all_mice,2);
+% 
+% %spaced out a lot in this vector to make it easier to see separation
+% mean_all_days = [mean_Cued_day_1    mean_Cued_day_4   mean_TO_day_01  mean_TO_day_03 ...
+%     mean_TO_day_06   mean_rew_thresh     mean_TO_Last   mean_Ext];
+% 
+% figure
+% cf = imagesc(graphtime,1,mean_all_days', climits);
+% 
+% colormap jet
+% nanmap = [0 0 0; colormap];
+% colormap(nanmap);
+% 
+% 
+% ax = gca;
+% xlim([-5 5]);
+% xticks([-4:2:4]);
+% ax.TickDir = 'out';
+% ax.XAxis.TickLength = [0.02 0.01];
+% ax.XAxis.LineWidth = 1.75;
+% 
+% %TO and Ext change based on when the different phases happened
+% %     ax.YTick = [1:8];
+% %     ax.YTickLabel = {'Cued 1','Cued 5', 'TO 3', '10 Rew*', 'TO 13', 'TO 15', 'Acq*', 'Last TO'};
+% 
+% set(gca,'YDir','normal') % put the trial numbers in order from bot to top on y-axis
+% 
+% %remove yticks and yticklabels
+% set(gca,'ytick',[])
+% set(gca,'yticklabel',[])
+% 
+% 
+% yline(3-0.5, 'LineWidth', 1.75);
+% yline(8-0.5, 'LineWidth', 1.75);
+% yline(6 - 0.5 , 'w', 'LineWidth', 1.75);
+% 
+% %double line to brighten
+% yline(6 - 0.5 , 'w', 'LineWidth', 1.75);
+% 
+% %     title(indicator ,'fontsize',16)
+% %     ylabel('Training Phase','fontsize',16)
+% %     xlabel('Seconds','fontsize',16)
+% cb = colorbar;
+% ylabel(cb, 'Z %\DeltaF/F0' ,'fontsize',16)
+% 
+% %Print png version of graph (save)
+% print([outputfolder '\Collapsed by incorrect ' indicator ], '-dpng');
+
 close all
 
 %print the version of the code used

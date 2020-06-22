@@ -1,3 +1,36 @@
+% Make sure to change this directory to the parent folder of this pipeline.
+% e.g.: 'C:\Users\rbc52\Documents\MATLAB\Crouse et al\2019-06'
+FP_PARENT_DIRECTORY = 'D:\Picciotto Lab Stuff\Crouse et al v2\Crouse et al v2\Crouse et al MATLAB Outputs and Raw\2020-04 BLA GCaMP6';
+
+%if FP_PARENT_DIRECTORY wasn't designated, stop script and alert the user
+if isempty(FP_PARENT_DIRECTORY)
+   fprintf('Please designate FP_PARENT_DIRECTORY in this pipeline and make sure the current folder for MATLAB is pointed in it');
+   return
+end
+
+
+FP_OUTPUT_DIRECTORY = [ FP_PARENT_DIRECTORY '\generated output' ];
+FP_RAW_DIRECTORY = [ FP_PARENT_DIRECTORY '\raw' ];
+FP_PROC_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated processed' ];
+FP_COMPILE_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated individual events by day' ];
+FP_COMPILE_REF_SIG_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated individual events by day Reference vs Signal' ];
+FP_MEDPC_FILE = [ FP_PARENT_DIRECTORY '\2020-04 MedPC Full.xlsx' ];
+FP_TIMESTAMP_FILE = [ FP_OUTPUT_DIRECTORY '\pipeline_2020_04 timestamps.xlsx' ];
+
+FP_INDIVIDUAL_DAY_GRAPH_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated invididual day graphs' ];
+
+FP_SUMMARY_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated event summary graphs' ];
+FP_SUMMARY_TP_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated summary_tone_poke_rec graphs' ];
+
+FP_MATLAB_VARS = [FP_OUTPUT_DIRECTORY '\MATLAB intermediate variables'];
+FP_MATLAB_VARS_FILENAME = [ FP_MATLAB_VARS '\rawandnamesonly.mat'];
+FP_INDIVIDUAL_DAY_DATA_FILENAME = [ FP_MATLAB_VARS '\day_graph_data.mat' ];
+
+save(getPipelineVarsFilename);
+
+MDIR_DIRECTORY_NAME = FP_OUTPUT_DIRECTORY;
+make_directory
+
 Basic_FP_processing_2020_04_v1
     %takes raw files and turns them into processed (calculates corrected df/f0,
     %while keeping the individual channel ones too)
@@ -17,32 +50,18 @@ FP_Compile_2020_04_v1
         %To Do: 
             %rerun rcamp mice and get the full deal 
 
-
-FP_2020_04_prelim_graphs_raw_v1
-%     %Plots the raw Ch1 and 2 and a zoomed in graph
-% 
-FP_2020_04_prelim_graphs_v1
-    %plots the individual df/f0's for ref and sig, as well as the corrected
-    %trace, both zoomed and full
-
 rick_mean_SEM_calc_indiv_plots_v6
 %     %1)makes mean and sem variables from the MATLAB_...xlsx files and saves
 %     %those variables for action heatmaps script
 %     %2)plots the individual traces/heatmaps for each mouse, each day, each
 %     %action
 % 
-combine_mean_sem
-%     %combines the mean, sem, and filenames vars for day to day data 
-%     
+
 rick_actions_heatmaps_all_phases_v5
 %     %makes action summary heatmaps across days and saves excel files for
 %     %prism plotting
 % 
-combine_rawtogether_filenames
-    %combines rawtogether and filenames vars for day to day data
-%     
+
 rick_tone_poke_rec_heatmaps_by_mouse_v4
     %makes tone_poke_rec heatmaps from rawtogether and filenames
-    
-%Manually: move processed and raw to extracted folders
 

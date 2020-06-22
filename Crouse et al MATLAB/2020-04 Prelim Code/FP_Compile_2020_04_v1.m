@@ -25,53 +25,30 @@
 clear;
 
 exp = '2020-04';
-% exp = '2018-07';
 
 codename = 'FP_Compile_2020_04_v1';
+load(getPipelineVarsFilename);
+
+%Real folders/files
+folder = FP_PROC_DIRECTORY ;
 
 
+outputfolder = FP_COMPILE_DIRECTORY;
+outputfile = [exp ' App MATLAB Output'];
 
-%removed check exp
-% if strcmp(exp,'2020-04')
-    
-    %Real folders/files
-    folder = 'C:\Users\User\Google Drive\2020-04 FP\Doric\Cued+TO\processed' ;
-    
-    
-    outputfolder = 'C:\Users\User\Google Drive\2020-04 FP\Doric\MATLAB';
-    outputfile = [exp ' App MATLAB Output'];
+%Pull uncorrected DF/F0
+dff0 = 'Ca2+ Signal (DF/F0)';
 
-    %Pull Corrected DF/F0
-    %     dff0 = 'Corrected';
-    
-    %Pull uncorrected DF/F0
-    dff0 = 'Ca2+ Signal (DF/F0)';
-    
-    medpcfile = 'C:\Users\User\Google Drive\2020-04 FP\2020-04 MedPC Full';
-    
-    timestampfolder = 'C:\Users\User\Google Drive\2020-04 FP\';
-    
+medpcfile = FP_MEDPC_FILE;
+timestampfolder = FP_OUTPUT_DIRECTORY;
 
-% leave this relic in case need to break things down by indicator, or
-% repurpose for another exp later
-% elseif strcmp(exp,'2018-07') 
-%     
-%     
-%     %Real folders/files
-%     folder = 'C:\Users\User\Google Drive\2018-07 BLA Fiber Pho\Doric\Processed' ;
-%     outputfolder = 'C:\Users\User\Google Drive\2018-07 BLA Fiber Pho\Doric\Processed\2018-07 App MATLAB';
-%     outputfile = '2018-07 App MATLAB Output';
-%     medpcfile = 'C:\Users\User\Google Drive\2018-07 BLA Fiber Pho\2018-07 MedPC Full';
-%     
-%     timestampfolder = 'C:\Users\User\Google Drive\2018-07 BLA Fiber Pho\';
-%     
-%     
-% end
+MDIR_DIRECTORY_NAME = outputfolder;
+make_directory; 
 
 
 %% MATLAB var saving options 
 %save just rawtogether and names daily
-save_name = [outputfile 'rawandnamesonly' date];
+save_name = FP_MATLAB_VARS_FILENAME;
 
 %save just rawtogether and names if doing all at once
 % save_name = 'current_rawtogether_filenames';
@@ -102,7 +79,7 @@ for ii = 1:length(filenames)
     
     % Read in the data (headers included b/c the
     raw{ii,1} = filenames(ii);
-    [~,~,raw{ii,2}] = xlsread(fullname);
+    raw{ii,2} = readcell(fullname);
 end
 
 %add file names to data's first col
@@ -140,71 +117,23 @@ for row = 1:length(raw)
     
 end
 
-%
-% if strcmp(exp,'2019-14')
-    %clearing raw to free up memory
-    clear raw
-    
-    %copy current data into col 3 so the df/f0 there can be overwritten with
-    %zdf/f0
-    data(:,3) = data(:,2);
-    
-    %clear out data{:,2} since it's been copied to data{:,3} for zscoring
-    %did this to speed up code. Remove this if you need to spot check data
-    for row = 1:size(data,1)
-        data{row,2} = [];
-    end
-    
-% elseif strcmp(exp, '2018-07')
-%     
-%     %% Resampling for old version of Doric that had timestamp issue
-%     
-%     for file = 1:size(data,1)
-%         [resampdff, resamptime] = resample(cell2mat(data{file,2}(:,2)), cell2mat(data{file,2}(:,1)) , 121.9066);
-%         
-%         %add the resampled timestamp and dff back to data{file,3}. Converting
-%         %to cell since rest of code will treat it as a cell
-%         data{file,3}(:,1) = num2cell(resamptime);
-%         data{file,3}(:,2) = num2cell(resampdff);
-%         data{file,3}(:,3) = num2cell(NaN);
-%         
-%         % find startpulse and add zero to that ind of data{file,3}(:,3)
-%         
-%         %transfer zscored data cell (w/o latency) to tempdata as matrix
-%         temptimedata = cell2mat(data{file,2}(:,1:3));
-%         
-%         %find the start pulse (first 0 in DIO) from pre-resampled data and
-%         starttimeindex = find(temptimedata(:,3)<1,1,'first');
-%         starttime = temptimedata(starttimeindex,1);
-%         
-%         %find index of closest timestamp to first 0
-%         [~,closeststarttimeind] = min(abs(cell2mat(data{file,3}(:,1))-starttime));
-%         
-%         %add 0 to that row, col 3
-%         data{file,3}{closeststarttimeind,3} = 0;
-%         
-%         %clear out data{:,2} since it's been copied to data{:,3} for zscoring
-%         %did this to speed up code. Remove this if you need to spot check data
-%         %data{file,2} = [];
-%         
-%         clear temptimedata
-%         
-%     end
-%     
-%     
-% end
+clear raw
 
+%copy current data into col 3 so the df/f0 there can be overwritten with
+%zdf/f0
+data(:,3) = data(:,2);
 
-%% Save doric data load point interim for faster running
-
-%saved way too big of a file and got stuck
-% save([outputfolder '\' outputfile '_' codename '_doricinterim' date '.mat'],'-v7.3')
+%clear out data{:,2} since it's been copied to data{:,3} for zscoring
+%did this to speed up code. Remove this if you need to spot check data
+for row = 1:size(data,1)
+    data{row,2} = [];
+end
 
 
 %% Read in MedPC Data
 %Don't have to iterate this bc everything is the the excel file
 %% Import the data
-[~, ~, medrawpresort] = xlsread(medpcfile);
+medrawpresort = readcell(medpcfile);
 %only imported Cued and CuedTO
 
 %cut off column headings and sort by animal ID, ascending order, use date
@@ -213,35 +142,13 @@ medheadsum = medrawpresort(1,1:16);
 medheader = medrawpresort(1,:);
 medrawpresort = medrawpresort(2:end,:);
 
-% if strcmp(exp,'2019-14')
-
 %sort by animal (col 1) and for tie breakers, sort by the date (col 2)   
 [~,sortidx] = sortrows(cell2mat(medrawpresort(:,[1 2])), [1 2]);
     
-    
-    
-% elseif strcmp(exp, '2018-07')
-%     sortingmatrix = zeros(size(medrawpresort,1),1);
-%     for row = 1:size(medrawpresort,1)
-%         sortingmatrix(row,1) = str2num(medrawpresort{row,1}(3:4));
-%     end
-%     
-%     %sort mouse number then sort medrawpresort by sortidx
-%     [~,sortidx] = sort(sortingmatrix);
-%     
-% end
-
 medraw = medrawpresort(sortidx,:);
 clear medrawpresort;
 
-
-
-
-
-
 %cycle through each mouse
-
-
 for row = 1:size(medraw,1)
     
     meddata = cell(1,8);
@@ -375,14 +282,6 @@ for file = 1:size(data,1)
         end
     end
     
-    %removing latency time stamp because don't really use it. Placing RCaMP
-    %signal there instead
-%     %time stamp latency into 4th column of data{file,2}
-%     for datarow = 2:size(data{file,3},1)
-%         data{file,3}{datarow,4} = data{file,3}{datarow,1}-data{file,3}{datarow-1,1};
-%     end
-    
-    
     %% Make zscore cell entry (file,3)
     dffcolumn = cell2mat(data{file,3}(:,2));
     zdff = nanzscore(dffcolumn);
@@ -394,12 +293,6 @@ for file = 1:size(data,1)
         r_zdff = nanzscore(r_dffcolumn);
         data{file,3}(:,4) = num2cell(r_zdff); 
     end
-    
-    %improved code above
-    %     for row = 1:size(zdff,1)
-    %         data{file,3}{row,2} = zdff(row);
-    %     end
-    %
     
     %% Trim to startpulse
     
@@ -418,10 +311,7 @@ for file = 1:size(data,1)
     starttime = tempdata(starttimeindex,1);
     tempdata(:,1) = tempdata(:,1)-starttime;
     tempdata = tempdata(starttimeindex:end,:);
-    
-    
-    
-    
+
     %% Identify actions, put them in col 4 of tempdata, put tempdata into col 5 of data
     
     %add NaN to col 4 (inserting directly into col 4 instead of cat to
@@ -516,32 +406,7 @@ for file = 1:size(data,1)
     
     %clear zscore col bc no longer needed after data{file,5} made
     data{file,3} = [];
-    
-    %% Testing AID
-    
-    %Find where ~nans are (when you don't catch it at tempdata stage)
-    % test = data{file,5}(~isnan(data{file,5}(:,4)),:);
-    
-    
-    
-    %mismatch
-    %     %Use these lines to test mismatch between when doric and medpc say an
-    %     %action happened. I looked through several and it seems like the mismatch
-    %     %occurs do to rounding/difference in timestamp latency between medpc/doric.
-    %     %Medpc will say the action started one dorictimestamp before it did in
-    %     %doric. Not a big deal, just a rounding error and so long as we're goign to
-    %     %make everything timestamp driven and reference medpc's recorded timestamps, we're good.
-    %           %Note:For some reason, MedPC code doesn't send a TTL to doric
-    %           when there's an incorrect that doesn't result in TO. There will
-    %           be mismatch bc of that
-    %
-    %         test = tempdata(~isnan(tempdata(:,4)),:);
-    %         mismatch = test(test(:,3)>0,:);
-    %         [~,misind] = min(abs(tempdata(:,1)-mismatch(1,1))); %change the mismatch row to look at other instances
-    %         missi = tempdata(misind-5:misind+5,:)
-    
-    
-    
+     
 end
 
 clear tempdata
@@ -560,22 +425,6 @@ clear tempdata
 
 %create a variable to let me know how many actions were cut off due to
 %different restrictions such as not enough time, etc
-
-%     %Used to determine how many extra cells to grab forward and back. Going with just number of cells for ease right now, should be consistent so long as there isn't a timestamp issue
-%     %minus 5 sec = 610
-%     [~,minus5ind] = min(abs(data{file,5}(1:actionind(action),1)-(data{file,5}(actionind(action),1)-5)));
-%     %plus 10 sec = 1221
-%     [~,plus10ind] = min(abs(data{file,5}(actionind(action):end,1)-(data{file,5}(actionind(action),1)+10)));
-
-
-
-%grab data{file,5}(actionind(action)-610:actionind(action)+1221,2)
-
-%currenlty for rcamp, made new variables (r_...) for the excel sheets, and
-%just adding another column for rawtogether
-        %maybe just duplicate all of this to make an if statement that has
-        %the loop and makes a new excel sheet 
-
 
 %initialize rawtogether
 rawtogether = cell(size(data,1),2);
@@ -640,24 +489,13 @@ for file = 1:size(data,1)
     %rawtogether is where I'm pulling everything from 5 sec before tone to 5
     %sec after rec (or after NP if rec entry didn't happen within 5 sec
     %after NP)
-    
-    
-    
-    
+
     %latency arrays
     ttp_list = zeros(0);
     ptr_list = zeros(0);
-    
-    
-    
-    
+
     %find all of the inidices of actions (not NaNs in aid cols)
     [actionind] = find(~isnan(data{file,5}(:,4)));
-    
-    %     %testing
-    %     testingAID = data{file,5}(actionind,[1 4]);
-    %     testingAID = [actionind testingAID];
-    
     
     %added if statements to pull rcamp if 849 or 850. copied it for pulling
     %df/f0 col but using r_ vars and pulling col 5 instead
@@ -705,13 +543,7 @@ for file = 1:size(data,1)
                         
                         %grab rew latency (poke to rec entry)
                         rawtogether{file,1}{4,correctcounter} = data{file,5}(nextrec,1) - data{file,5}(actionind(action),1);
-                        
-                        %if there was no rec entry 5 sec after correct, don't take the
-                        %event
-                        %note: this means that there will be an empty
-                        %column for those rewards that don't meet this
-                        %requirement   
-                    
+
                     %if not rcamp mouse, grab as before
                     else
                        %grab tone - 5 sec : rec + 5 sec
@@ -841,91 +673,85 @@ for file = 1:size(data,1)
     
     %     Comment since don't need outputs right now
     
-    xlswrite(outputname, actioncounter, 'counter');
+    writecell(actioncounter, outputname, 'Sheet', 'counter');
     
     %if rcamp mouse, write both vars together to save time 
     if str2double(data{file,1}{1}(11:14)) == 849 || str2double(data{file,1}{1}(11:14)) == 850
         
-                if correctcounter ~= 0
-            xlswrite(outputname, correct, 'correct');
-            xlswrite(outputname, r_correct, 'r_correct');
+        if correctcounter ~= 0
+            writematrix(correct, outputname, 'Sheet', 'correct');
+            writematrix(r_correct, outputname, 'Sheet', 'r_correct');
         end
         
         if tonecounter ~= 0
-            xlswrite(outputname, tone, 'tone');
-            xlswrite(outputname, r_tone, 'r_tone');
+            writematrix(tone, outputname, 'Sheet', 'tone');
+            writematrix(r_tone, outputname, 'Sheet', 'r_tone');
         end
         
         if incorrectcounter ~= 0
-            xlswrite(outputname, incorrect, 'incorrect');
-            xlswrite(outputname, r_incorrect, 'r_incorrect');
+            writematrix(incorrect, outputname, 'Sheet', 'incorrect');
+            writematrix(r_incorrect, outputname, 'Sheet', 'r_incorrect');
         end
         
         if receptaclecounter ~= 0
-            xlswrite(outputname, receptacle, 'receptacle');
-            xlswrite(outputname, r_receptacle, 'r_receptacle');
+            writematrix(receptacle, outputname, 'Sheet', 'receptacle');
+            writematrix(r_receptacle, outputname, 'Sheet', 'r_receptacle');
         end
         
         if randreccounter ~= 0
-            xlswrite(outputname, randrec, 'randrec');
-            xlswrite(outputname, r_randrec, 'r_randrec');
+            writematrix(randrec, outputname, 'Sheet', 'randrec');
+            writematrix(r_randrec, outputname, 'Sheet', 'r_randrec');
         end
         
         if tonehitcounter ~= 0
-            xlswrite(outputname, tonehit, 'tonehit');
-            xlswrite(outputname, r_tonehit, 'r_tonehit');
+            writematrix(tonehit, outputname, 'Sheet', 'tonehit');
+            writematrix(r_tonehit, outputname, 'Sheet', 'r_tonehit');
         end
         
         if tonemisscounter ~= 0
-            xlswrite(outputname, tonemiss, 'tonemiss');
-            xlswrite(outputname, r_tonemiss, 'r_tonemiss');
+            writematrix(tonemiss, outputname, 'Sheet', 'tonemiss');
+            writematrix(r_tonemiss, outputname, 'Sheet', 'r_tonemiss');
         end
         
         if inactivecounter ~= 0
-            xlswrite(outputname, inactive, 'inactive');
-            xlswrite(outputname, r_inactive, 'r_inactive');
+            writematrix(inactive, outputname, 'Sheet', 'inactive');
+            writematrix(r_inactive, outputname, 'Sheet', 'r_inactive');
         end
-        
  
     else %if not rcamp mouse
         
         if correctcounter ~= 0
-            xlswrite(outputname, correct, 'correct');
+            writematrix(correct, outputname, "Sheet", 'correct');
         end
         
         if tonecounter ~= 0
-            xlswrite(outputname, tone, 'tone');
+            writematrix(tone, outputname, "Sheet", 'tone');
         end
         
         if incorrectcounter ~= 0
-            xlswrite(outputname, incorrect, 'incorrect');
+            writematrix( incorrect, outputname, "Sheet",'incorrect');
         end
         
         if receptaclecounter ~= 0
-            xlswrite(outputname, receptacle, 'receptacle');
+            writematrix(receptacle,outputname, "Sheet",'receptacle');
         end
         
         if randreccounter ~= 0
-            xlswrite(outputname, randrec, 'randrec');
+            writematrix(randrec,outputname, "Sheet",'randrec');
         end
         
         if tonehitcounter ~= 0
-            xlswrite(outputname, tonehit, 'tonehit');
+            writematrix(tonehit,outputname, "Sheet",'tonehit');
         end
         
         if tonemisscounter ~= 0
-            xlswrite(outputname, tonemiss, 'tonemiss');
+            writematrix(tonemiss,outputname, "Sheet",'tonemiss');
         end
         
         if inactivecounter ~= 0
-            xlswrite(outputname, inactive, 'inactive');
+            writematrix(inactive,outputname, "Sheet",'inactive');
         end
-        
     end
-    %it to the data cell
-    
-    %then clear the temp zdffdata arrays
-    
 end
 
 %% Timestamp file
@@ -941,24 +767,15 @@ file = 1;
 timestampfile = data{file,5}(timeind-610:timeind+1221,1)-data{file,5}(timeind,1);
 
 
-xlswrite([timestampfolder 'timestamp.xlsx'],timestampfile)
+writematrix(timestampfile, FP_TIMESTAMP_FILE)
 
 
 
 
 %% Save data in file
 
-%save all variables together
-% save([outputfolder '\' outputfile '.mat']);
-
-%save just rawtogether and names daily
-% save([outputfolder '\MATLAB vars\' outputfile 'rawandnamesonly' date '.mat'], 'rawtogether', 'filenames', '-v7.3');
-
-%save just rawtogether and names if doing all at once
-% save([outputfolder '\MATLAB vars\current_rawtogether_filenames.mat'], 'rawtogether', 'filenames', '-v7.3');
-
 %save here, edit what you save up top to prevent scrolling a ton
-save([outputfolder '\MATLAB vars\' save_name '.mat'], 'rawtogether', 'filenames', '-v7.3');
+save([FP_MATLAB_VARS save_name '.mat'], 'rawtogether', 'filenames', '-v7.3');
 
 %% Print code version text file
 

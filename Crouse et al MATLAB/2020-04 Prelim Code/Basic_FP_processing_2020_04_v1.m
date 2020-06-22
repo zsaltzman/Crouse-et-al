@@ -12,9 +12,10 @@
 %Need to allow for 2channel calculation after getting answer from Doric
 
 clc
-clear all;
+clear;
 close all;
 
+load(getPipelineVarsFilename);
 
 %Designate special cases (here, RCaMP+GACh)
 rcamp = [];
@@ -22,9 +23,12 @@ nbm_bla = ["0890"; "0891"; "0894"; "0907"; "0913"; "0914"];
 
 
 %% Change this directory to the folder containing your raw doric files!
-directory = 'C:\Users\User\Google Drive\2020-04 FP\Doric\Cued+TO\raw';
-outputdirectory = 'C:\Users\User\Google Drive\2020-04 FP\Doric\Cued+TO\processed';
+directory = FP_RAW_DIRECTORY;
+outputdirectory = FP_PROC_DIRECTORY;
 files = dir(directory);
+
+MDIR_DIRECTORY_NAME = outputdirectory;
+make_directory;
 
 % The next function is not necessarily needed but it is just a way to
 % avoid processing files already processed. Keep in mind that to be
@@ -43,7 +47,7 @@ for file = files'
     
     
     %[~,~,allData{1}] = csvread([directory,'\' filename]);
-    allData = csvread([directory,'\' filename],2,0); % 1: skip first two lines line (header); might need to skip more depeding how the file but basically the goal is to scrap the headers.
+    allData = readmatrix([directory,'\' filename]); % 1: skip first two lines line (header); might need to skip more depeding how the file but basically the goal is to scrap the headers.
     firstLine = find(allData(:,1) > 0.1, 1); % Everything before ~100 ms is noise from the lock-in filter calculation; it sounds like this is default in the correction we get wqhen we extract DF/F0
     data = allData(firstLine:end, :);
     
@@ -74,23 +78,12 @@ for file = files'
         DF_F0 = calculateDF_F0_2nd_order(data);
         DIO = data(:,5);
         correctedSignal = subtractReferenceAndSave(DF_F0, outputdirectory, filename, DIO);
-        
-        
-        
+  
     else %standard one channel
-        
-        %use this for comparing different df/f0 calculations
-        %         filename = [filename '2ndorder'];
-        
         DF_F0 = calculateDF_F0(data);
         DIO = data(:,5);
         correctedSignal = subtractReferenceAndSave(DF_F0, outputdirectory, filename, DIO);
-        
-        
+   
     end
-    
-    %plotting
-    %   figure;
-    %   plot(correctedSignal(:,1), correctedSignal(:,4))
     
 end

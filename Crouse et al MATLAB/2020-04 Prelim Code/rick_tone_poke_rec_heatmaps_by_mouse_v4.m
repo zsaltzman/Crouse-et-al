@@ -12,9 +12,9 @@
 
 
 clear;
+load(getPipelineVarsFilename);
 
 exp = '2020-04';
-% exp = '2019-06';
 codename = 'rick_tone_poke_rec_heatmaps_by_mouse_v4';
 
 %Groups
@@ -31,10 +31,13 @@ rcamp_gach = [];
 
 % if strcmp(exp,'2019-14')
     
-    load('C:\Users\User\Google Drive\2020-04 FP\Doric\MATLAB\MATLAB vars\current_rawtogether_filenames.mat');
+    load(FP_MATLAB_VARS_FILENAME);
     
-    outputfolder = 'C:\Users\User\Google Drive\2020-04 FP\Doric\MATLAB\Summary TonetoPoketoRec Heat';
+    outputfolder = FP_SUMMARY_TP_DIRECTORY;
     outputfile = [exp ' App MATLAB tonetopoketorec heat by mouse data'];
+    
+    MDIR_DIRECTORY_NAME = outputfolder;
+    make_directory; 
     
     %file to skip
     skips = [" "];
@@ -64,29 +67,6 @@ data_mouse_ID = zeros(size(filenames,1),1);
     rew_threshold = [""];
     
     
-    %for grabbing specific days for collapsing mice
-%     TO_10_rew = ["856 Timeout Day 09"; "860 Timeout Day 09"];
-    
-    
-    
-% elseif strcmp(exp,'2018-07')
-%     %prep for cut down data to just one mouse
-%     
-%     for ii = 1:size(filenames,1)
-%         data_mouse_ID(ii) = str2double(filenames{ii}(14));
-%     end
-%     
-%     all_mouse_ID= unique(data_mouse_ID);
-%     
-%     %for drawing white line
-%     %     rew_threshold = ["3_Timeout_Day_08"; "4_Timeout_Day_08"; "5 was dud"; "6_Timeout_Day_13"];
-%     rew_threshold = ["3_Timeout_Day_08"; "4_Timeout_Day_08"; "6_Timeout_Day_13"];
-%     
-% end
-
-
-
-% for num = [11 12]
 for num = 1:size(all_mouse_ID,1)
 % for num = [4 5 7 8]
     % for num = 5
@@ -122,8 +102,6 @@ for num = 1:size(all_mouse_ID,1)
     elseif any(mouse_ID == gad_gcamp)
         indicator = 'Gad65-GCaMP';
         climits = [-3 4];
-        %         climits = [-3 7];
-        %         GAChnum=find(BLA_GACh==mouse_ID);
         
     elseif any(mouse_ID == NBM_BLA)
         indicator = 'NBM-BLA';
@@ -135,15 +113,6 @@ for num = 1:size(all_mouse_ID,1)
         
     end
     
-    %originally had 813's limits lower but not sure why
-    %     %come up with something more elegant for changing the climits for
-    %     %individual mice if doing this for a lot
-    %     if mouse_ID == 813
-    %         climits = [-3 6];
-    %     end
-    %
-    
-    
     %trim data and filenames to just current mouse
     mousedata = rawtogether((data_mouse_ID(:,1) == mouse_ID),:);
     mousefiles = filenames((data_mouse_ID(:,1) == mouse_ID),:);
@@ -151,12 +120,6 @@ for num = 1:size(all_mouse_ID,1)
     %use day_counter to prevent black bar when skipping days
     day_counter = 0;
     
-    %     day_align = NaN(611+lat*122+611,size(mousedata,1));
-    %     day_align_sem = NaN(611+lat*122+611,size(mousedata,1));
-    %
-    
-    %do just first 19 days
-%     for file = 1:19
     for file = 1:size(mousedata,1)
         
         %instead of finding longest latency, standardize to a 4 sec
@@ -188,16 +151,6 @@ for num = 1:size(all_mouse_ID,1)
             %prevent black bars for skipped days
             day_counter = day_counter+1;
             
-            %
-            %
-            %             %create a time vector based on longestlat, with t=0 is tone onset
-            %             timevector = mousedata{1,1}{2,2}(1:1710,1)-mousedata{1,1}{2,2}(611,1);
-            %             Saved in C:\Users\User\Google Drive\2019-06 NBM-BLA + GACh FP\Doric\Processed\2019-06 App MATLAB\Mouse TonetoPoke Heat
-            
-            %preallocate aligntogether as NaN
-            %doing 5 sec before tone + tone + half_lat + divider + half_lat
-            % + poke + half_rew_lat + divider + half_rew_lat + rec + 5 sec
-            % after rec
             
             %find number of non empty
             not_empty_rewards = find(~cellfun(@isempty,mousedata{file,1}(1,:)));
@@ -280,183 +233,18 @@ for num = 1:size(all_mouse_ID,1)
     
     TO_Last_day = find(~cellfun(@isempty,timeout_test),1,'last');
     
-%     if strcmp(exp,'2019-14')
-        %Find all the days that are Ext
-        Ext_test = strfind(day_align_filenames,'ZExtinction');
-        
-%     elseif strcmp(exp,'2018-07')
-%         Ext_test = strfind(day_align_filenames,'ZZExt');
-%         
-%     end
-    
-    
+    Ext_test = strfind(day_align_filenames,'ZExtinction');
+ 
     %find the first non-empty cell and set that index to Ext
     Ext = find(~cellfun(@isempty,Ext_test),1);
     
     
-    
-%     %Find the rew_thresh day
-%     %indexing by the num of GACh mouse, into the rew_threshold array that
-%     %has the full names for the threshold days, similar to above but
-%     %looking for a specific day, not just one
-%     
-% %   
-%     
-
-
 %% No collapsed yet until make a better way to do this for each group
-
-%     
-%     if any(mouse_ID == NBM_BLA)
-%         rew_thresh_test = strfind(day_align_filenames,rew_threshold(NBM_BLAnum));
-%         
-%         rew_thresh_day = find(~cellfun(@isempty,rew_thresh_test),1);
-%         
-%         rew_thresh_all_mice(:,NBM_BLAnum) = day_align(:,rew_thresh_day );
-%         
-%         %% For collapsing mice
-%         
-%         %    Cued_day_1
-%         Cued_day_1_test = strfind(lower(day_align_filenames),lower([num2str(NBM_BLA(NBM_BLAnum)) ' Cued Day 01']));
-%         
-%         Cued_day_1_day = find(~cellfun(@isempty,Cued_day_1_test),1);
-%         
-%         Cued_day_1_all_mice(:,NBM_BLAnum) = day_align(:,Cued_day_1_day);
-%         
-%         %    Cued_day_5
-%         Cued_day_4_test = strfind(lower(day_align_filenames),lower([num2str(NBM_BLA(NBM_BLAnum)) ' Cued Day 04']));
-%         
-%         Cued_day_4_day = find(~cellfun(@isempty,Cued_day_4_test),1);
-%         
-%         Cued_day_4_all_mice(:,NBM_BLAnum) = day_align(:,Cued_day_4_day);
-%         
-%         
-% %         %TO_day_01
-% %         
-% %         TO_day_01_test = strfind(lower(day_align_filenames),lower([num2str(NBM_BLA(NBM_BLAnum)) ' Timeout Day 01']));
-% %         
-% %         TO_day_01_day = find(~cellfun(@isempty,TO_day_01_test),1);
-% %         
-% %         TO_day_01_day_all_mice(:,NBM_BLAnum) = day_align(:,TO_day_01_day);
-% %         
-%         
-%           %TO_day_03
-%         
-%         TO_day_03_test = strfind(lower(day_align_filenames),lower([num2str(NBM_BLA(NBM_BLAnum)) ' Timeout Day 03']));
-%         
-%         TO_day_03_day = find(~cellfun(@isempty,TO_day_03_test),1);
-%         
-%         TO_day_03_day_all_mice(:,NBM_BLAnum) = day_align(:,TO_day_03_day);
-%         
-% %         %    TO_10_rew
-% %         
-% %         TO_10_rew_test = strfind(lower(day_align_filenames),lower(TO_10_rew(NBM_BLAnum)));
-% %         
-% %         TO_10_rew_day = find(~cellfun(@isempty,TO_10_rew_test),1);
-% %         
-% %         TO_10_rew_day_all_mice(:,NBM_BLAnum) = day_align(:,TO_10_rew_day);
-%         
-% %         
-% %         %    TO_day_06
-% %         
-% %         TO_day_06_test = strfind(lower(day_align_filenames),lower([num2str(NBM_BLA(NBM_BLAnum)) ' Timeout Day 06']));
-% %         
-% %         TO_day_06_day = find(~cellfun(@isempty,TO_day_06_test),1);
-% %         
-% %         TO_day_06_day_all_mice(:,NBM_BLAnum) = day_align(:,TO_day_06_day);
-% %         
-% %         % TO_day_15
-% %         
-% %         TO_day_15_test = strfind(lower(day_align_filenames),lower([num2str(BLA_GACh(NBM_BLAnum)) '_Timeout_Day_15']));
-% %         
-% %         TO_day_15_day = find(~cellfun(@isempty,TO_day_15_test),1);
-% %         
-% %         TO_day_15_day_all_mice(:,NBM_BLAnum) = day_align(:,TO_day_15_day);
-%         
-%         %Last_TO
-%         %simpler than other bc I found last TO day above
-%         TO_Last_day_all_mice(:,NBM_BLAnum) = day_align(:,TO_Last_day);
-%         
-%       
-%     elseif any(mouse_ID == camkii_gcamp)
-%         
-%        rew_thresh_test = strfind(day_align_filenames,rew_threshold(CaMKIInum));
-%         
-%         rew_thresh_day = find(~cellfun(@isempty,rew_thresh_test),1);
-%         
-%         rew_thresh_all_mice(:,CaMKIInum) = day_align(:,rew_thresh_day );
-%         
-%         %% For collapsing mice
-%         
-%         %    Cued_day_1
-%         Cued_day_1_test = strfind(lower(day_align_filenames),lower([num2str(NBM_BLA(CaMKIInum)) ' Cued Day 01']));
-%         
-%         Cued_day_1_day = find(~cellfun(@isempty,Cued_day_1_test),1);
-%         
-%         Cued_day_1_all_mice(:,CaMKIInum) = day_align(:,Cued_day_1_day);
-%         
-%         %    Cued_day_5
-%         Cued_day_4_test = strfind(lower(day_align_filenames),lower([num2str(NBM_BLA(CaMKIInum)) ' Cued Day 04']));
-%         
-%         Cued_day_4_day = find(~cellfun(@isempty,Cued_day_4_test),1);
-%         
-%         Cued_day_4_all_mice(:,CaMKIInum) = day_align(:,Cued_day_4_day);
-%         
-%         
-% %         %TO_day_01
-% %         
-% %         TO_day_01_test = strfind(lower(day_align_filenames),lower([num2str(NBM_BLA(CaMKIInum)) ' Timeout Day 01']));
-% %         
-% %         TO_day_01_day = find(~cellfun(@isempty,TO_day_01_test),1);
-% %         
-% %         TO_day_01_day_all_mice(:,CaMKIInum) = day_align(:,TO_day_01_day);
-% %         
-%         
-%           %TO_day_03
-%         
-%         TO_day_03_test = strfind(lower(day_align_filenames),lower([num2str(NBM_BLA(CaMKIInum)) ' Timeout Day 03']));
-%         
-%         TO_day_03_day = find(~cellfun(@isempty,TO_day_03_test),1);
-%         
-%         TO_day_03_day_all_mice(:,CaMKIInum) = day_align(:,TO_day_03_day);
-%         
-% %         %    TO_10_rew
-% %         
-% %         TO_10_rew_test = strfind(lower(day_align_filenames),lower(TO_10_rew(CaMKIInum)));
-% %         
-% %         TO_10_rew_day = find(~cellfun(@isempty,TO_10_rew_test),1);
-% %         
-% %         TO_10_rew_day_all_mice(:,CaMKIInum) = day_align(:,TO_10_rew_day);
-%         
-% %         
-% %         %    TO_day_06
-% %         
-% %         TO_day_06_test = strfind(lower(day_align_filenames),lower([num2str(NBM_BLA(CaMKIInum)) ' Timeout Day 06']));
-% %         
-% %         TO_day_06_day = find(~cellfun(@isempty,TO_day_06_test),1);
-% %         
-% %         TO_day_06_day_all_mice(:,CaMKIInum) = day_align(:,TO_day_06_day);
-% %         
-% %         % TO_day_15
-% %         
-% %         TO_day_15_test = strfind(lower(day_align_filenames),lower([num2str(BLA_GACh(CaMKIInum)) '_Timeout_Day_15']));
-% %         
-% %         TO_day_15_day = find(~cellfun(@isempty,TO_day_15_test),1);
-% %         
-% %         TO_day_15_day_all_mice(:,CaMKIInum) = day_align(:,TO_day_15_day);
-%         
-%         %Last_TO
-%         %simpler than other bc I found last TO day above
-%         TO_Last_day_all_mice(:,CaMKIInum) = day_align(:,TO_Last_day);
-%         
-%         
-%     end
 
 
     %% Plot and save
     
-     figure
-%     figure('Visible', 'off')
+    figure
     cf = imagesc(day_align', climits); % not using the actual time since the number
     
     colormap jet
@@ -485,38 +273,13 @@ for num = 1:size(all_mouse_ID,1)
     
     
     ax = gca;
-    
-    %too crowded with 0.5/-.5
-    %     ax.XTick = [beforetoneticks lat_tick poke_tick rew_lat_tick rec_tick afterrecticks];
-    %     ax.XTickLabel = { '-4', '-2',  'Tone', '2 / -2', 'NP','0.5/-.5' ,'Rec', '2',  '4'};
-    
     ax.XTick = [beforetoneticks lat_tick poke_tick rec_tick afterrecticks];
     ax.XTickLabel = { '-4', '-2',  'Tone', '2 / -2', 'NP','Rec', '2',  '4'};
     ax.TickDir = 'out';
     ax.XAxis.TickLength = [0.02 0.01];
     ax.XAxis.LineWidth = 1.75;
     
-    %TO and Ext change based on when the different phases happened
-    %lines to draw/label
-        %use this for the interim, add in Ext as we get there and remove
-        %ticks and labels later when wanting to publish
-    
-        %add y ticks and labels, just sep phases
-%         ax.YTick = [0.5 TO-0.5];
-%         yline(TO-0.5, 'LineWidth', 1.75);
-%         ax.YTickLabel = {'Cued', 'TO'};
-        
-    %add y ticks/labels for just the day
-%        ax.YTick = 1:size(day_label,1);
-%        ax.YTickLabel = day_label;
-%        yline(TO-0.5, 'LineWidth', 1.75);
-%        
-%        if ~isempty(Ext)
-%            yline(Ext-0.5, 'LineWidth', 1.75);
-%        end
-%        
-        
-        
+   
         
 
         %         ax.YTick = [0.5 TO-0.5 rew_thresh_day - 0.5  Ext-0.5];
@@ -524,24 +287,13 @@ for num = 1:size(all_mouse_ID,1)
         if ~isempty(Ext)
             yline(Ext-0.5, 'LineWidth', 1.75);
         end
-        
-%         if ~isempty(rew_thresh_day)
-%             yline(rew_thresh_day - 0.5 , 'w', 'LineWidth', 1.75);
-%         end
-%                 ax.YTickLabel = {'Cued', 'TO', 'Acq.','Ext.'};
-        
-        %lines to draw/label for non-BLA_GACh
-
-    
+ 
     set(gca,'YDir','normal')
     
     %remove yticks and yticklabels
     set(gca,'ytick',[])
     set(gca,'yticklabel',[])
-    
-%     title([indicator ' ' num2str(mouse_ID)],'fontsize',16)
-%     ylabel('Training Phase','fontsize',16)
-%     xlabel('Seconds','fontsize',16)
+
     cb = colorbar;
     ylabel(cb, 'Z %\DeltaF/F0' ,'fontsize',16)
     
@@ -551,12 +303,7 @@ for num = 1:size(all_mouse_ID,1)
     
     %Print png version of graph (save)
     print([outputfolder '\' indicator ' ' num2str(mouse_ID) ' Tone_NP_Rec'], '-dtiff', '-r300');
-    
-    %zoom in
-    %     xlim([beforetoneticks(2) afterrecticks(1)])
-    %     print([outputfolder '\2 secs\' num2str(mouse_ID) ' ' indicator ' Tone_NP_Rec'], '-dpng');
-    %
-    
+   
     clear day_align day_align_sem day_align_filenames day_label
     
     
@@ -570,136 +317,6 @@ end
 
 
 %% plot collapsed 
-
-% if any(mouse_ID == BLA_GACh)
-    
-%     %% Plot collapsed across mice (expanded collapse days)
-%     
-%     
-% %     climits = [-2 6];
-%     
-%     mean_Cued_day_1 = nanmean(Cued_day_1_all_mice,2);
-%     mean_Cued_day_4 = nanmean(Cued_day_4_all_mice,2);
-%     mean_TO_day_03 = nanmean(TO_day_03_day_all_mice,2);
-% %     mean_TO_10 = nanmean(TO_10_rew_day_all_mice,2);
-%     mean_TO_day_06 = nanmean(TO_day_06_day_all_mice,2);
-% %     mean_TO_day_15 = nanmean(TO_day_15_day_all_mice,2);
-%     mean_rew_thresh = nanmean(rew_thresh_all_mice,2);
-%     mean_TO_Last = nanmean(TO_Last_day_all_mice,2);
-%     
-%     %spaced out a lot in this vector to make it easier to see separation
-%     mean_all_days = [mean_Cued_day_1    mean_Cued_day_4     mean_TO_day_03   mean_TO_day_06   mean_rew_thresh     mean_TO_Last];
-%     
-%     figure
-%     cf = imagesc(mean_all_days', climits); % not using the actual time since the number
-%     
-%     colormap jet
-%     nanmap = [0 0 0; colormap];
-%     colormap(nanmap);
-%     
-%     
-%     ax = gca;
-%     ax.XTick = [beforetoneticks lat_tick poke_tick rec_tick afterrecticks];
-%     ax.XTickLabel = { '-4', '-2',  'Tone', '2 / -2', 'NP','Rec', '2',  '4'};
-%     ax.TickDir = 'out';
-%     ax.XAxis.TickLength = [0.02 0.01];
-%     ax.XAxis.LineWidth = 1.75;
-%     
-%     %TO and Ext change based on when the different phases happened
-%     %     ax.YTick = [1:8];
-%     %     ax.YTickLabel = {'Cued 1','Cued 5', 'TO 3', '10 Rew*', 'TO 13', 'TO 15', 'Acq*', 'Last TO'};
-%     
-%     set(gca,'YDir','normal') % put the trial numbers in order from bot to top on y-axis
-%     
-%     %remove yticks and yticklabels
-%     set(gca,'ytick',[])
-%     set(gca,'yticklabel',[])
-%     
-%     
-%     yline(3-0.5, 'LineWidth', 1.75);
-%     yline(5 - 0.5 , 'w', 'LineWidth', 1.75);
-%     
-%     
-%     %     title(indicator ,'fontsize',16)
-%     %     ylabel('Training Phase','fontsize',16)
-%     %     xlabel('Seconds','fontsize',16)
-%     cb = colorbar;
-%     ylabel(cb, 'Z %\DeltaF/F0' ,'fontsize',16)
-%     
-%     %Print png version of graph (save)
-%     print([outputfolder '\Collapsed+ ' indicator ' Tone_NP_Rec'], '-dpng');
-%     
-    %zoom in
-    %     xlim([beforetoneticks(2) afterrecticks(1)])
-    %     print([outputfolder '\2 secs\Collapsed+ ' indicator ' Tone_NP_Rec'], '-dpng');
-    
-    
-%     
-% elseif any(mouse_ID == BLA_GCaMP)
-%     %% Plot collapsed across mice (expanded collapse days)
-%     
-%     
-%     
-%     climits = [-1.5 3.5];
-%     
-%     mean_Cued_day_1 = nanmean(Cued_day_1_all_mice,2);
-%     mean_Cued_day_4 = nanmean(Cued_day_4_all_mice,2);
-%     mean_TO_day_03 = nanmean(TO_day_03_day_all_mice,2);
-%     mean_rew_thresh = nanmean(rew_thresh_all_mice,2);
-%     
-%     %spaced out a lot in this vector to make it easier to see separation
-%     mean_all_days = [mean_Cued_day_1    mean_Cued_day_4     mean_TO_day_03 mean_rew_thresh];
-%     
-%     figure
-%     cf = imagesc(mean_all_days', climits); % not using the actual time since the number
-%     
-%     colormap jet
-%     nanmap = [0 0 0; colormap];
-%     colormap(nanmap);
-%     
-%     
-%     ax = gca;
-%     ax.XTick = [beforetoneticks lat_tick poke_tick rec_tick afterrecticks];
-%     ax.XTickLabel = { '-4', '-2',  'Tone', '2 / -2', 'NP','Rec', '2',  '4'};
-%     ax.TickDir = 'out';
-%     ax.XAxis.TickLength = [0.02 0.01];
-%     ax.XAxis.LineWidth = 1.75;
-%     
-%     %TO and Ext change based on when the different phases happened
-%     %     ax.YTick = [1:8];
-%     %     ax.YTickLabel = {'Cued 1','Cued 5', 'TO 3', '10 Rew*', 'TO 13', 'TO 15', 'Acq*', 'Last TO'};
-%     
-%     set(gca,'YDir','normal') % put the trial numbers in order from bot to top on y-axis
-%     
-%     %remove yticks and yticklabels
-%     set(gca,'ytick',[])
-%     set(gca,'yticklabel',[])
-%     
-%     
-%     yline(3-0.5, 'LineWidth', 1.75);
-%     yline(4 - 0.5 , 'w', 'LineWidth', 1.75);
-%     
-%     
-%     %     title(indicator ,'fontsize',16)
-%     %     ylabel('Training Phase','fontsize',16)
-%     %     xlabel('Seconds','fontsize',16)
-%     cb = colorbar;
-%     ylabel(cb, 'Z %\DeltaF/F0' ,'fontsize',16)
-%     
-%     %Print png version of graph (save)
-%     print([outputfolder '\Collapsed+ ' indicator ' Tone_NP_Rec'], '-dpng');
-%     
-%     %zoom in
-%     %     xlim([beforetoneticks(2) afterrecticks(1)])
-%     %     print([outputfolder '\2 secs\Collapsed+ ' indicator ' Tone_NP_Rec'], '-dpng');
-%     
-%     
-%     
-%     
-%     
-% end
-
-
 
 
 %% Print code version text file
