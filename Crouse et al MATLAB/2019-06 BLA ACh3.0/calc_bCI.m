@@ -24,7 +24,7 @@ load(event_dir_path);
 event_dir = datanames; % Filenames loaded from the day graph data
 % event_variable = 3; 
 variable_names = { 'correct' 'tone' 'incorrect' 'receptacle' 'randrec' 'tonehit' 'tonemiss' 'inactive' };
-variable_list = [ 1, 3, 5, 6];
+variable_list = [ 1, 3, 4, 5, 6];
 
 for current_var=1:length(variable_list)
     event_variable = variable_list(current_var);
