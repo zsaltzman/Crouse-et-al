@@ -10,11 +10,11 @@ end
 
 
 FP_OUTPUT_DIRECTORY = [ FP_PARENT_DIRECTORY '\generated output' ];
-FP_RAW_DIRECTORY = [ FP_PARENT_DIRECTORY '\raw' ];
+FP_RAW_DIRECTORY = [ FP_PARENT_DIRECTORY '\raw partial' ];
 FP_PROC_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated processed' ];
 FP_COMPILE_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated individual events by day' ];
 FP_COMPILE_REF_SIG_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated individual events by day Reference vs Signal' ];
-FP_MEDPC_FILE = [ FP_PARENT_DIRECTORY '\2020-04 MedPC Full.xlsx' ];
+FP_MEDPC_FILE = [ FP_PARENT_DIRECTORY '\2020-04 MedPC Partial.xlsx' ];
 FP_TIMESTAMP_FILE = [ FP_OUTPUT_DIRECTORY '\pipeline_2020_04 timestamps.xlsx' ];
 
 FP_INDIVIDUAL_DAY_GRAPH_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated invididual day graphs' ];
@@ -31,7 +31,7 @@ save(getPipelineVarsFilename);
 MDIR_DIRECTORY_NAME = FP_OUTPUT_DIRECTORY;
 make_directory
 
-Basic_FP_processing_2020_04_v1
+% Basic_FP_processing_2020_04_v1
     %takes raw files and turns them into processed (calculates corrected df/f0,
     %while keeping the individual channel ones too)
 

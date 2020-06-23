@@ -775,7 +775,7 @@ writematrix(timestampfile, FP_TIMESTAMP_FILE)
 %% Save data in file
 
 %save here, edit what you save up top to prevent scrolling a ton
-save([FP_MATLAB_VARS save_name '.mat'], 'rawtogether', 'filenames', '-v7.3');
+save([FP_MATLAB_VARS '.mat'], 'rawtogether', 'filenames', '-v7.3');
 
 %% Print code version text file
 
