@@ -32,7 +32,7 @@ make_directory;
 skips = ["0849 Timeout Day 09"; "0849 Timeout Day 11"; "0856 ZExtinction Day 01"];
 
 %% Import timestamp
-time = xlsread(timestampfile);
+time = readmatrix(timestampfile);
 
 
 %% read data
@@ -79,13 +79,6 @@ for file = 1:length(filenames)
                 
                 graphdataidx=find(strcmpi(sheets{sheetsidx},variables));
                 graphdata{file,graphdataidx} = xlsread(fullname,sheets{sheetsidx});
-                
-                %if it's an rcamp mouse, grab the corresponding r_ var 8 idx's
-                %away
-                if str2double(datanames{file,1}{1}(8:11)) == 849 || str2double(datanames{file,1}{1}(8:11)) == 850
-                    r_graphdata{file,graphdataidx} = xlsread(fullname,['r_' sheets{sheetsidx}]);
-                end
-                
             end
         end
         
@@ -111,12 +104,6 @@ for file = 1:size(graphdata,1)
             if ~isempty(graphdata{file,variable})
                 graphmean{file,variable} = nanmean(graphdata{file,variable},2);
                 graphsem{file,variable} = nanstd(graphdata{file,variable},0,2)/sqrt(size(graphdata{file,variable},2));
-                
-                %if a rcamp mouse, make r_vars from r_graphdata
-                if str2num(datanames{file,1}{1}(8:11)) == 849 || str2num(datanames{file,1}{1}(8:11)) == 850
-                    r_graphmean{file,variable} = nanmean(r_graphdata{file,variable},2);
-                    r_graphsem{file,variable} = nanstd(r_graphdata{file,variable},0,2)/sqrt(size(r_graphdata{file,variable},2));
-                end
             end
         end
     end

@@ -79,10 +79,6 @@ for row = 1:length(raw)
             data{row,2}(:,3) = raw{row,2}(2:end,column);
         end
         
-        %Grab RCaMP
-        if strcmp(raw{row,2}{1,column}, 'DF/F0 RCaMP')
-            data{row,2}(:,4) = raw{row,2}(2:end,column);
-        end     
     end
 end
 
@@ -247,11 +243,11 @@ for file = 1:size(data,1)
     data{file,3}(:,2) = num2cell(zdff);
     
     %calc zscore for rcamp
-    if size(data{file,3},2) > 3
-        r_dffcolumn = cell2mat(data{file,3}(:,4));
-        r_zdff = nanzscore(r_dffcolumn);
-        data{file,3}(:,4) = num2cell(r_zdff); 
-    end
+%     if size(data{file,3},2) > 3
+%         r_dffcolumn = cell2mat(data{file,3}(:,4));
+%         r_zdff = nanzscore(r_dffcolumn);
+%         data{file,3}(:,4) = num2cell(r_zdff); 
+%     end
   
     %% Trim to startpulse
     %transfer zscored data cell (w/o latency) to tempdata as matrix
@@ -259,10 +255,10 @@ for file = 1:size(data,1)
     tempdata = cell2mat(data{file,3}(:,1:3));
     
     %put rcamp into col 5 of tempdata
-    if size(data{file,3},2) > 3
-        tempdata(:,5) = cell2mat(data{file,3}(:,4));
-    end
-    
+%     if size(data{file,3},2) > 3
+%         tempdata(:,5) = cell2mat(data{file,3}(:,4));
+%     end
+%     
     %find the start pulse (first 0 in DIO), align t = 0 to that, and trim
     %tempdata to remove pre-start pulse rows
     starttimeindex = find(tempdata(:,3)<1,1,'first');
@@ -400,25 +396,6 @@ for file = 1:size(data,1)
       
     inactive = zeros(1832,0);
     inactivecounter = 0;
-    
-    %for rcamp, no counters bc using regular ones for counters
-    if str2num(data{file,1}{1}(11:14)) == 849 || str2num(data{file,1}{1}(11:14)) == 850
-        r_correct = zeros(1832,0);
-      
-        r_tone = zeros(1832,0);
-        
-        r_tonehit = zeros(1832,0);
-        
-        r_tonemiss = zeros(1832,0);
-           
-        r_incorrect = zeros(1832,0);
-        
-        r_receptacle = zeros(1832,0);
-        
-        r_randrec = zeros(1832,0);
-
-        r_inactive = zeros(1832,0);
-    end
 
     %latency arrays
     ttp_list = zeros(0);
@@ -439,14 +416,7 @@ for file = 1:size(data,1)
             if data{file,5}(actionind(action),4) == 1
                 correctcounter = correctcounter +1;
                 correct(1:end,correctcounter) = data{file,5}(actionind(action)-610:actionind(action)+1221,2);
-                
-                %rcamp
-                if str2num(data{file,1}{1}(11:14)) == 849 || str2num(data{file,1}{1}(11:14)) == 850
-                    r_correct(1:end,correctcounter) = data{file,5}(actionind(action)-610:actionind(action)+1221,5);
-                end
-                
-                %rawtogether
-                
+
                 %find the tone that came before this correct NP
                 lasttone = find(data{file,5}(1:actionind(action),4)==2, 1,'last');
                 
@@ -457,34 +427,18 @@ for file = 1:size(data,1)
                     %if there's a rec after correct np within 5 sec, take 5 sec
                     %after that
                     
-                    %if rcamp mouse, grab col 5 too
-                    if str2num(data{file,1}{1}(11:14)) == 849 || str2num(data{file,1}{1}(11:14)) == 850
-                        %grab tone - 5 sec : rec + 5 sec
-                        rawtogether{file,1}{1,correctcounter} = data{file,5}(lasttone-610:nextrec+610,[1 2 4 5]);
-                        
-                        %grab just tone - 5 sec : poke + 5 sec
-                        rawtogether{file,1}{2,correctcounter} = data{file,5}(lasttone-610:actionind(action)+610,[1 2 4 5]);
-                        
-                        %grab latency from tone to poke
-                        rawtogether{file,1}{3,correctcounter} = rawtogether{file,1}{2,correctcounter}(end-610,1)-rawtogether{file,1}{2,correctcounter}(611,1);
-                        
-                        %grab rew latency (poke to rec entry)
-                        rawtogether{file,1}{4,correctcounter} = data{file,5}(nextrec,1) - data{file,5}(actionind(action),1);
-                      
-                    %if not rcamp mouse, grab as before
-                    else
-                       %grab tone - 5 sec : rec + 5 sec
-                        rawtogether{file,1}{1,correctcounter} = data{file,5}(lasttone-610:nextrec+610,[1 2 4]);
-                        
-                        %grab just tone - 5 sec : poke + 5 sec
-                        rawtogether{file,1}{2,correctcounter} = data{file,5}(lasttone-610:actionind(action)+610,[1 2 4]);
-                        
-                        %grab latency from tone to poke
-                        rawtogether{file,1}{3,correctcounter} = rawtogether{file,1}{2,correctcounter}(end-610,1)-rawtogether{file,1}{2,correctcounter}(611,1);
-                        
-                        %grab rew latency (poke to rec entry)
-                        rawtogether{file,1}{4,correctcounter} = data{file,5}(nextrec,1) - data{file,5}(actionind(action),1);                 
-                    end
+                    %grab tone - 5 sec : rec + 5 sec
+                    rawtogether{file,1}{1,correctcounter} = data{file,5}(lasttone-610:nextrec+610,[1 2 4]);
+                    
+                    %grab just tone - 5 sec : poke + 5 sec
+                    rawtogether{file,1}{2,correctcounter} = data{file,5}(lasttone-610:actionind(action)+610,[1 2 4]);
+                    
+                    %grab latency from tone to poke
+                    rawtogether{file,1}{3,correctcounter} = rawtogether{file,1}{2,correctcounter}(end-610,1)-rawtogether{file,1}{2,correctcounter}(611,1);
+                    
+                    %grab rew latency (poke to rec entry)
+                    rawtogether{file,1}{4,correctcounter} = data{file,5}(nextrec,1) - data{file,5}(actionind(action),1);
+                    
                 end
                 
                 %tone
@@ -494,72 +448,38 @@ for file = 1:size(data,1)
                 tonecounter = tonecounter +1;
                 tone(1:end, tonecounter) = data{file,5}(actionind(action)-610:actionind(action)+1221,2);
                 
-                %rcamp
-                if str2num(data{file,1}{1}(11:14)) == 849 || str2num(data{file,1}{1}(11:14)) == 850
-                    r_tone(1:end, tonecounter) = data{file,5}(actionind(action)-610:actionind(action)+1221,5);
-                end
-                
+       
                 %tonehit
                 if any(ismember(data{file,5}(actionind(action):actionind(action)+1223,4),1)) == 1
                     tonehitcounter = tonehitcounter +1;
                     tonehit(1:end, tonehitcounter) = data{file,5}(actionind(action)-610:actionind(action)+1221,2);
                     
-                    %rcamp
-                    if str2num(data{file,1}{1}(11:14)) == 849 || str2num(data{file,1}{1}(11:14)) == 850
-                        r_tonehit(1:end, tonehitcounter) = data{file,5}(actionind(action)-610:actionind(action)+1221,5);
-                    end
-                    
-                    %tonemiss
+              
+                %tonemiss
                 else
                     tonemisscounter = tonemisscounter + 1;
                     tonemiss(1:end, tonemisscounter) = data{file,5}(actionind(action)-610:actionind(action)+1221,2);
-                    
-                    %rcamp
-                    if str2num(data{file,1}{1}(11:14)) == 849 || str2num(data{file,1}{1}(11:14)) == 850
-                        r_tonemiss(1:end, tonemisscounter) = data{file,5}(actionind(action)-610:actionind(action)+1221,5);
-                    end
-                    
                 end
               
                 %incorrect
             elseif data{file,5}(actionind(action),4) == 3
                 incorrectcounter = incorrectcounter + 1;
                 incorrect(1:end,incorrectcounter) = data{file,5}(actionind(action)-610:actionind(action)+1221,2);
-                
-                %rcamp
-                if str2num(data{file,1}{1}(11:14)) == 849 || str2num(data{file,1}{1}(11:14)) == 850
-                    r_incorrect(1:end,incorrectcounter) = data{file,5}(actionind(action)-610:actionind(action)+1221,5);
-                end
-                
                 %receptacle
             elseif data{file,5}(actionind(action),4) == 4
                 receptaclecounter = receptaclecounter + 1;
                 receptacle(1:end,receptaclecounter) = data{file,5}(actionind(action)-610:actionind(action)+1221,2);
                 
-                %rcamp
-                if str2num(data{file,1}{1}(11:14)) == 849 || str2num(data{file,1}{1}(11:14)) == 850
-                    r_receptacle(1:end,receptaclecounter) = data{file,5}(actionind(action)-610:actionind(action)+1221,5);
-                end
-                
                 %randrec (rec entry not following reward)
             elseif data{file,5}(actionind(action),4) == 9
                 randreccounter = randreccounter + 1;
                 randrec(1:end,randreccounter) = data{file,5}(actionind(action)-610:actionind(action)+1221,2);
-                
-                %rcamp
-                if str2num(data{file,1}{1}(11:14)) == 849 || str2num(data{file,1}{1}(11:14)) == 850
-                    r_randrec(1:end,randreccounter) = data{file,5}(actionind(action)-610:actionind(action)+1221,5);
-                end
-                
+
                 %inactive
             elseif data{file,5}(actionind(action),4) == 6
                 inactivecounter = inactivecounter + 1;
                 inactive(1:end,inactivecounter) = data{file,5}(actionind(action)-610:actionind(action)+1221,2);
-                
-                %rcamp
-                if str2num(data{file,1}{1}(11:14)) == 849 || str2num(data{file,1}{1}(11:14)) == 850
-                    r_inactive(1:end,inactivecounter) = data{file,5}(actionind(action)-610:actionind(action)+1221,5);
-                end
+
             end
         end
     end
@@ -582,84 +502,41 @@ for file = 1:size(data,1)
     writecell(actioncounter, outputname, 'Sheet', 'counter');
     
     %if rcamp mouse, write both vars together to save time 
-    if str2double(data{file,1}{1}(11:14)) == 849 || str2double(data{file,1}{1}(11:14)) == 850
-        
-        if correctcounter ~= 0
-            writematrix(correct, outputname, 'Sheet', 'correct');
-            writematrix(r_correct, outputname, 'Sheet', 'r_correct');
-        end
-        
-        if tonecounter ~= 0
-            writematrix(tone, outputname, 'Sheet', 'tone');
-            writematrix(r_tone, outputname, 'Sheet', 'r_tone');
-        end
-        
-        if incorrectcounter ~= 0
-            writematrix(incorrect, outputname, 'Sheet', 'incorrect');
-            writematrix(r_incorrect, outputname, 'Sheet', 'r_incorrect');
-        end
-        
-        if receptaclecounter ~= 0
-            writematrix(receptacle, outputname, 'Sheet', 'receptacle');
-            writematrix(r_receptacle, outputname, 'Sheet', 'r_receptacle');
-        end
-        
-        if randreccounter ~= 0
-            writematrix(randrec, outputname, 'Sheet', 'randrec');
-            writematrix(r_randrec, outputname, 'Sheet', 'r_randrec');
-        end
-        
-        if tonehitcounter ~= 0
-            writematrix(tonehit, outputname, 'Sheet', 'tonehit');
-            writematrix(r_tonehit, outputname, 'Sheet', 'r_tonehit');
-        end
-        
-        if tonemisscounter ~= 0
-            writematrix(tonemiss, outputname, 'Sheet', 'tonemiss');
-            writematrix(r_tonemiss, outputname, 'Sheet', 'r_tonemiss');
-        end
-        
-        if inactivecounter ~= 0
-            writematrix(inactive, outputname, 'Sheet', 'inactive');
-            writematrix(r_inactive, outputname, 'Sheet', 'r_inactive');
-        end
-        
- 
-    else %if not rcamp mouse
-        
-if correctcounter ~= 0
-            writematrix(correct, outputname, "Sheet", 'correct');
-        end
-        
-        if tonecounter ~= 0
-            writematrix(tone, outputname, "Sheet", 'tone');
-        end
-        
-        if incorrectcounter ~= 0
-            writematrix( incorrect, outputname, "Sheet",'incorrect');
-        end
-        
-        if receptaclecounter ~= 0
-            writematrix(receptacle,outputname, "Sheet",'receptacle');
-        end
-        
-        if randreccounter ~= 0
-            writematrix(randrec,outputname, "Sheet",'randrec');
-        end
-        
-        if tonehitcounter ~= 0
-            writematrix(tonehit,outputname, "Sheet",'tonehit');
-        end
-        
-        if tonemisscounter ~= 0
-            writematrix(tonemiss,outputname, "Sheet",'tonemiss');
-        end
-        
-        if inactivecounter ~= 0
-            writematrix(inactive,outputname, "Sheet",'inactive');
-        end
-        
+    
+    %if not rcamp mouse
+    
+    if correctcounter ~= 0
+        writematrix(correct, outputname, "Sheet", 'correct');
     end
+    
+    if tonecounter ~= 0
+        writematrix(tone, outputname, "Sheet", 'tone');
+    end
+    
+    if incorrectcounter ~= 0
+        writematrix( incorrect, outputname, "Sheet",'incorrect');
+    end
+    
+    if receptaclecounter ~= 0
+        writematrix(receptacle,outputname, "Sheet",'receptacle');
+    end
+    
+    if randreccounter ~= 0
+        writematrix(randrec,outputname, "Sheet",'randrec');
+    end
+    
+    if tonehitcounter ~= 0
+        writematrix(tonehit,outputname, "Sheet",'tonehit');
+    end
+    
+    if tonemisscounter ~= 0
+        writematrix(tonemiss,outputname, "Sheet",'tonemiss');
+    end
+    
+    if inactivecounter ~= 0
+        writematrix(inactive,outputname, "Sheet",'inactive');
+    end
+
 end
 
 %% Timestamp file
