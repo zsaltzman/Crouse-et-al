@@ -30,11 +30,11 @@ end
 
 
 FP_OUTPUT_DIRECTORY = [ FP_PARENT_DIRECTORY '\generated output' ];
-FP_RAW_DIRECTORY = [ FP_PARENT_DIRECTORY '\raw partial' ];
+FP_RAW_DIRECTORY = [ FP_PARENT_DIRECTORY '\raw' ];
 FP_PROC_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated processed' ];
 FP_COMPILE_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated individual events by day' ];
 FP_COMPILE_REF_SIG_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated individual events by day Reference vs Signal' ];
-FP_MEDPC_FILE = [ FP_PARENT_DIRECTORY '\2019-14 MedPC Partial.xlsx' ]; % Took a day I didn't have data for out
+FP_MEDPC_FILE = [ FP_PARENT_DIRECTORY '\2019-14 MedPC Full.xlsx' ]; % Took a day I didn't have data for out
 FP_TIMESTAMP_FILE = [ FP_OUTPUT_DIRECTORY '\pipeline_2019_14_ach timestamps.xlsx' ];
 
 FP_SUMMARY_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated event summary graphs' ];
