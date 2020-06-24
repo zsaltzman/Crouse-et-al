@@ -27,6 +27,9 @@ directory = FP_RAW_DIRECTORY;
 outputdirectory = FP_PROC_DIRECTORY;
 files = dir(directory);
 
+processed_files = dir(outputdirectory);
+processed_files = [ processed_files(:).name ];
+
 MDIR_DIRECTORY_NAME = outputdirectory;
 make_directory;
 
@@ -40,7 +43,7 @@ for file = files'
     filename = strcat(file.name);
     %only process .csv files, don't process "PROCESSED" files, and don't
     %process any that already have a 'PROCESSED' version in the folder
-    if isempty(strfind(filename, '.csv'))==true || isempty(strfind(filename, 'PROCESSED_'))==false || sum(strcmp(strcat('PROCESSED_',filename),{files.name}))>0
+    if isempty(strfind(filename, '.csv'))==true || isempty(strfind(filename, 'PROCESSED_'))==false || sum(strcmp(strcat('PROCESSED_',filename),{files.name}))>0 ~isempty(strfind(processed_files, filename))
         continue
     end
     

@@ -52,19 +52,19 @@ make_directory
 %         %To Do: 
 %             %rerun rcamp mice and get the full deal 
 % 
-rick_mean_SEM_calc_indiv_plots_v6
+% rick_mean_SEM_calc_indiv_plots_v6
 % %     %1)makes mean and sem variables from the MATLAB_...xlsx files and saves
 % %     %those variables for action heatmaps script
 % %     %2)plots the individual traces/heatmaps for each mouse, each day, each
 % %     %action
 % % 
 % 
-% rick_actions_heatmaps_all_phases_v5
+Actions_heatmaps_all_phases_pub
 % %     %makes action summary heatmaps across days and saves excel files for
 % %     %prism plotting
 % % 
 % 
-% rick_tone_poke_rec_heatmaps_by_mouse_v4
+rick_tone_poke_rec_heatmaps_by_mouse_v4
 %     %makes tone_poke_rec heatmaps from rawtogether and filenames
     
 calc_bCI
