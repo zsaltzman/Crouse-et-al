@@ -15,7 +15,6 @@ NBM_BLA = [856 860];
 
 %variables
 variables = ["correct" "tone" "incorrect" "receptacle" "randrec" "tonehit" "tonemiss" "inactive"];
-r_variables = ["r_correct" "r_tone" "r_incorrect" "r_receptacle" "r_randrec" "r_tonehit" "r_tonemiss" "r_inactive"];
 
 
 %% Set folder/files
