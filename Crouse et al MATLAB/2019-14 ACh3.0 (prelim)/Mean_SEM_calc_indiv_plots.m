@@ -64,14 +64,14 @@ for file = 1:length(filenames)
         
         % Read in the data
     else
-        [~,sheets] = xlsfinfo(fullname);
+        sheets = sheetnames(fullname);
         
         %loop through all sheets, find the sheets whose name match one of
         %the variables. Pull that sheet and put it in graphdata in the col
         %that matches the idx of the var name in the variable string (e.g.
         %correct is col 1). If an rcamp mouse, pull the r_ sheet and put it
         %in r_graphdata
-        for sheetsidx = 1:size(sheets,2)
+        for sheetsidx = 1:length(sheets)
             if any(strcmpi(sheets{sheetsidx},variables))
                 %fix checking of mouse number, maybe change it to just making
                 %a new r_graphdata variable
@@ -110,7 +110,7 @@ end
 
 
 % save(save_name, 'graphmean', 'graphsem', 'datanames', '-v7.3');
-save(save_name, 'graphmean', 'graphsem', 'datanames', 'graphdata', '-v7.3');
+save(save_name, 'graphdata', 'graphmean', 'graphsem', 'datanames', 'graphdata', '-v7.3');
 
 %print the version of the code used
 fileID = fopen([outputfolder '\' date 'codeused.txt'],'w');
