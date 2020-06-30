@@ -43,7 +43,8 @@ for file = files'
     filename = strcat(file.name);
     %only process .csv files, don't process "PROCESSED" files, and don't
     %process any that already have a 'PROCESSED' version in the folder
-    if isempty(strfind(filename, '.csv'))==true || isempty(strfind(filename, 'PROCESSED_'))==false || sum(strcmp(strcat('PROCESSED_',filename),{files.name}))>0 ~isempty(strfind(processed_files, filename))
+    if isempty(strfind(filename, '.csv'))==true || isempty(strfind(filename, 'PROCESSED_'))==false || sum(strcmp(strcat('PROCESSED_',filename),{files.name}))>0 || ~isempty(strfind(processed_files, filename))
+        fprintf('Skipping %s\n', filename);
         continue
     end
     
@@ -53,6 +54,7 @@ for file = files'
     allData = readmatrix([directory,'\' filename]); % 1: skip first two lines line (header); might need to skip more depeding how the file but basically the goal is to scrap the headers.
     firstLine = find(allData(:,1) > 0.1, 1); % Everything before ~100 ms is noise from the lock-in filter calculation; it sounds like this is default in the correction we get wqhen we extract DF/F0
     data = allData(firstLine:end, :);
+    
     
     %Actually calculating rcamp signal
     if any(strcmpi(filename(1:4),rcamp))
