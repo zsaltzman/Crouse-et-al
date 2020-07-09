@@ -30,11 +30,11 @@ end
 
 
 FP_OUTPUT_DIRECTORY = [ FP_PARENT_DIRECTORY '\generated output' ];
-FP_RAW_DIRECTORY = [ FP_PARENT_DIRECTORY '\raw' ];
+FP_RAW_DIRECTORY = [ FP_PARENT_DIRECTORY '\raw partial' ];
 FP_PROC_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated processed' ];
 FP_COMPILE_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated individual events by day' ];
 FP_COMPILE_REF_SIG_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated individual events by day Reference vs Signal' ];
-FP_MEDPC_FILE = [ FP_PARENT_DIRECTORY '\2019-14 MedPC Full.xlsx' ]; % Took a day I didn't have data for out
+FP_MEDPC_FILE = [ FP_PARENT_DIRECTORY '\2019-14 MedPC Partial.xlsx' ]; % Took a day I didn't have data for out
 FP_TIMESTAMP_FILE = [ FP_OUTPUT_DIRECTORY '\pipeline_2019_14_ach timestamps.xlsx' ];
 
 FP_SUMMARY_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated event summary graphs' ];
@@ -44,6 +44,8 @@ FP_MATLAB_VARS = [FP_OUTPUT_DIRECTORY '\MATLAB intermediate variables'];
 FP_MATLAB_VARS_FILENAME = [ FP_MATLAB_VARS '\rawandnamesonly.mat'];
 FP_INDIVIDUAL_DAY_DATA_FILENAME = [ FP_MATLAB_VARS '\day_graph_data.mat' ];
 
+FP_BCI_PARENT_FOLDER = [ FP_OUTPUT_DIRECTORY '\generated bci' ];
+
 save(getPipelineVarsFilename);
 
 MDIR_DIRECTORY_NAME = FP_OUTPUT_DIRECTORY;
@@ -51,16 +53,20 @@ make_directory
 
 summary_behavior_graphs
 
-Basic_FP_processing_2019_14
+% Basic_FP_processing_2019_14
 
-FP_Compile_2019_14
+% FP_Compile_2019_14
         
-FP_Compile_2019_14_ref
+% FP_Compile_2019_14_ref
  
-FP_Compile_2019_14_sig
+% FP_Compile_2019_14_sig
 
-Mean_SEM_calc_indiv_plots
+% Mean_SEM_calc_indiv_plots
 
-Actions_heatmaps_all_phases_pub
+% Actions_heatmaps_all_phases_pub
 
-Tone_poke_rec_heatmaps_by_mouse_pub
+% Tone_poke_rec_heatmaps_by_mouse_pub
+
+% calc_bCI
+
+calc_bCI_cohort_2019_14

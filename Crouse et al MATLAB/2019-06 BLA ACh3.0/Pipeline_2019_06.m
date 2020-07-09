@@ -67,4 +67,6 @@ make_directory
 	
 % Tone_poke_rec_heatmaps_by_mouse
 
-calc_bCI
+% calc_bCI
+
+calc_bCI_cohort_2019_06

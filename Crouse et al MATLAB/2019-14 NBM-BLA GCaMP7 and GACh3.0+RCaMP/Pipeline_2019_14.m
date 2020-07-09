@@ -31,7 +31,7 @@ FP_RAW_DIRECTORY = [ FP_PARENT_DIRECTORY '\raw partial' ];
 FP_PROC_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated processed' ];
 FP_COMPILE_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated individual events by day' ];
 FP_COMPILE_REF_SIG_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated individual events by day Reference vs Signal' ];
-FP_MEDPC_FILE = [ FP_PARENT_DIRECTORY '\2019-14 MedPC Partial.xlsx' ]; % Took a day I didn't have data for out
+FP_MEDPC_FILE = [ FP_PARENT_DIRECTORY '\2019-14 MedPC Full.xlsx' ]; % Took a day I didn't have data for out
 FP_TIMESTAMP_FILE = [ FP_OUTPUT_DIRECTORY '\pipeline_2019_14 timestamps.xlsx' ];
 
 FP_SUMMARY_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated event summary graphs' ];
@@ -64,4 +64,6 @@ make_directory
 % 
 % Tone_poke_rec_heatmaps_by_mouse_pub
 
-calc_bCI
+% calc_bCI
+
+calc_bCI_cohort_2019_14
