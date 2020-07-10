@@ -64,8 +64,7 @@ data_mouse_ID = zeros(size(filenames,1),1);
     
     
     %for drawing white line
-    rew_threshold = [""];
-    
+    rew_threshold= ["0891 Timeout Day 02" "0913 Timeout Day 05" "" "" "" ""; "353 Timeout Day 04" "354 Timeout Day 02" "361 Timeout Day 06" "362 Timeout Day 05" "363 Timeout Day 04" "365 Timeout Day 02" ];
     
 for num = 1:size(all_mouse_ID,1)
 % for num = [4 5 7 8]
