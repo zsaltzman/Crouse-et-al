@@ -64,7 +64,8 @@ data_mouse_ID = zeros(size(filenames,1),1);
     
     
     %for drawing white line
-    rew_threshold= ["0891 Timeout Day 02" "0913 Timeout Day 05" "" "" "" ""; "353 Timeout Day 04" "354 Timeout Day 02" "361 Timeout Day 06" "362 Timeout Day 05" "363 Timeout Day 04" "365 Timeout Day 02" ];
+    rew_threshold = [ "891 Timeout Day 02"; "913 Timeout Day 05" ];
+    Ext_Day = [ "891 ZExtinction Day 01"; "913 ZExtinction Day 01" ];
     
 for num = 1:size(all_mouse_ID,1)
 % for num = [4 5 7 8]
@@ -237,9 +238,51 @@ for num = 1:size(all_mouse_ID,1)
     %find the first non-empty cell and set that index to Ext
     Ext = find(~cellfun(@isempty,Ext_test),1);
     
+    rew_thresh_test = strfind(day_align_filenames,rew_threshold(NBM_BLAnum));
     
-%% No collapsed yet until make a better way to do this for each group
-
+    rew_thresh_day = find(~cellfun(@isempty,rew_thresh_test),1);
+    
+    rew_thresh_all_mice(:,NBM_BLAnum) = day_align(:,rew_thresh_day );
+    
+    Ext_Day_test = strfind(day_align_filenames,Ext_Day(NBM_BLAnum));
+    
+    Ext_Day_day = find(~cellfun(@isempty,Ext_Day_test),1);
+    
+    Ext_Day_day_all_mice(:,NBM_BLAnum) = day_align(:,Ext_Day_day );
+    
+%% For collapsing groups
+ %    Cued_day_1
+    Cued_day_1_test = strfind(lower(day_align_filenames),lower([num2str(NBM_BLA(NBM_BLAnum)) ' Cued Day 01']));
+    
+    Cued_day_1_day = find(~cellfun(@isempty,Cued_day_1_test),1);
+    
+    Cued_day_1_all_mice(:,NBM_BLAnum) = day_align(:,Cued_day_1_day);
+    
+    %    Cued_day_4
+    Cued_day_4_test = strfind(lower(day_align_filenames),lower([num2str(NBM_BLA(NBM_BLAnum)) ' Cued Day 04']));
+    
+    Cued_day_4_day = find(~cellfun(@isempty,Cued_day_4_test),1);
+    
+    Cued_day_4_all_mice(:,NBM_BLAnum) = day_align(:,Cued_day_4_day);
+    
+    %TO_day_01
+    
+    TO_day_01_test = strfind(lower(day_align_filenames),lower([num2str(NBM_BLA(NBM_BLAnum)) ' Timeout Day 01']));
+    
+    TO_day_01_day = find(~cellfun(@isempty,TO_day_01_test),1);
+    
+    TO_day_01_day_all_mice(:,NBM_BLAnum) = day_align(:,TO_day_01_day);
+    
+    %TO_day_06
+    TO_day_06_test = strfind(lower(day_align_filenames),lower([num2str(NBM_BLA(NBM_BLAnum)) ' Timeout Day 06']));
+    
+    TO_day_06_day = find(~cellfun(@isempty,TO_day_06_test),1);
+    
+    TO_day_06_day_all_mice(:,NBM_BLAnum) = day_align(:,TO_day_06_day);
+    
+    %Last_TO
+    %simpler than other bc I found last TO day above
+    TO_Last_day_all_mice(:,NBM_BLAnum) = day_align(:,TO_Last_day);
 
     %% Plot and save
     
@@ -316,7 +359,54 @@ end
 
 
 %% plot collapsed 
+% Plot collapsed across mice (expanded collapse days)
 
+mean_Cued_day_1 = nanmean(Cued_day_1_all_mice,2);
+mean_Cued_day_4 = nanmean(Cued_day_4_all_mice,2);
+mean_TO_day_01 = nanmean(TO_day_01_day_all_mice,2);
+mean_rew_thresh = nanmean(rew_thresh_all_mice,2);
+mean_TO_day_06 = nanmean(TO_day_06_day_all_mice,2);
+mean_TO_Last = nanmean(TO_Last_day_all_mice,2);
+mean_Ext = nanmean(Ext_Day_day_all_mice,2);
+
+%spaced out a lot in this vector to make it easier to see separation
+mean_all_days = [mean_Cued_day_1    mean_Cued_day_4     mean_TO_day_01 ...
+       mean_rew_thresh   mean_TO_day_06    mean_TO_Last   mean_Ext];
+
+figure('Visible', 'off')
+cf = imagesc(mean_all_days', climits); % not using the actual time since the number
+
+colormap jet
+nanmap = [0 0 0; colormap];
+colormap(nanmap);
+
+
+ax = gca;
+ax.XTick = [beforetoneticks lat_tick poke_tick rec_tick afterrecticks];
+ax.XTickLabel = { '-4', '-2',  'Tone', '2 / -2', 'NP','Rec', '2',  '4'};
+ax.TickDir = 'out';
+ax.XAxis.TickLength = [0.02 0.01];
+ax.XAxis.LineWidth = 1.75;
+
+set(gca,'YDir','normal') % put the trial numbers in order from bot to top on y-axis
+
+%remove yticks and yticklabels
+set(gca,'ytick',[])
+set(gca,'yticklabel',[])
+
+
+yline(3-0.5, 'LineWidth', 1.75);
+yline(7-0.5, 'LineWidth', 1.75);
+yline(4.0 - 0.5 , 'w', 'LineWidth', 1.75);
+
+%double line to brighten
+yline(5 - 0.5 , 'w', 'LineWidth', 1.75);
+
+cb = colorbar;
+ylabel(cb, 'Z %\DeltaF/F0' ,'fontsize',16)
+
+%Print png version of graph (save)
+print([outputfolder '\Collapsed+ ' indicator ' Tone_NP_Rec'], '-dpng');
 
 %% Print code version text file
 

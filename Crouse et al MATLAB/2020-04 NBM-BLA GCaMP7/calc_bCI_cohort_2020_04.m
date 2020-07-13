@@ -14,6 +14,15 @@ output_dir_path = FP_BCI_PARENT_FOLDER;
 MDIR_DIRECTORY_NAME = output_dir_path;
 make_directory;
 
+cohort_dir_path = join([ FP_BCI_PARENT_FOLDER '\cohort' ]);
+
+% Determine which study is being run by using number of filenames
+if length(filenames) <= 24
+   study_idx = 1;
+else
+   study_idx = 2;
+end
+
 % day at which each mouse hit the reward threshold
 rew_threshold =  [6 21 -1 -1 -1 -1; 8 18 34 45 56 66];
 
@@ -24,12 +33,13 @@ ext_day = [12 24 -1 -1 -1 -1; 12 24 36 48 60 72];
 
 % cued days 1 and 4, timeout days 3, 13, 15, and the last
 % day of timeout
-cued_1 = [1 13 -1 -1 -1 -1; ];
-cued_4 = [4 16 -1 -1 -1 -1; ];
-timeout_3 = [7 19 46];
+cued_1 = [1 13 -1 -1 -1 -1; 1 13 25 37 49 61];
+cued_4 = [4 16 -1 -1 -1 -1; 4 16 28 40 52 64];
+timeout_3 = [7 19 -1 -1 -1 -1; 7 19 31 43 55 67];
+timeout_last = [11 23 -1 -1 -1 -1; 11 23 35 47 59 71]; 
 
-days_array = [ cued_1; cued_4; timeout_3; rew_threshold; ext_day];
-day_names = { 'Cued Day 01'; 'Cued Day 04'; 'Timeout Day 03'; 'Reward Threshold'; 'Extinction' };
+days_array = [ cued_1(study_idx, :); cued_4(study_idx, :); timeout_3(study_idx, :); rew_threshold(study_idx, :); timeout_last(study_idx, :); ext_day(study_idx, :) ];
+day_names = { 'Cued Day 01'; 'Cued Day 04'; 'Timeout Day 03'; 'Reward Threshold'; 'Final Timeout'; 'Extinction' };
 
 load(event_dir_path);
 event_dir = datanames; % Filenames loaded from the day graph data
@@ -38,7 +48,7 @@ variable_names = { 'correct' 'tone' 'incorrect' 'receptacle' 'randrec' 'tonehit'
 
 for vidx=1:length(event_variables)
     event_variable = event_variables(vidx);
-    var_directory = join([ output_dir_path '\' variable_names{vidx} ], '');
+    var_directory = join([ cohort_dir_path '\' variable_names{vidx} ], '');
     
     MDIR_DIRECTORY_NAME = var_directory; 
     make_directory;
@@ -46,7 +56,9 @@ for vidx=1:length(event_variables)
 
         event_sig = [];
         for didx = 1:size(days_array, 2)
-            event_sig = cat(2, event_sig, graphmean{days_array(fidx, didx), event_variable});
+            if days_array(fidx, didx) ~= -1
+                event_sig = cat(2, event_sig, graphmean{days_array(fidx, didx), event_variable});
+            end
         end
 
         event_null = zeros(size(event_sig, 1), size(event_sig, 2)); % This step isn't necessary for a 'true' null signal (i.e. dF/F = 0), but this may change for different definitions of null in the future
