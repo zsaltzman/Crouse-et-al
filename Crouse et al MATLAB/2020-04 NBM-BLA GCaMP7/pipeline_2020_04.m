@@ -64,7 +64,7 @@ make_directory
 %      %makes action summary heatmaps across days and saves excel files for
 %      %prism plotting
 
-rick_tone_poke_rec_heatmaps_by_mouse_v4
+% rick_tone_poke_rec_heatmaps_by_mouse_v4
 %     %makes tone_poke_rec heatmaps from rawtogether and filenames
     
 

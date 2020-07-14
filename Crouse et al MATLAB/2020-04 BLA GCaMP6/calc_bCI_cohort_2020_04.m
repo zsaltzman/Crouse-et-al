@@ -16,29 +16,22 @@ make_directory;
 
 cohort_dir_path = join([ FP_BCI_PARENT_FOLDER '\cohort' ]);
 
-% Determine which study is being run by using number of filenames
-if length(filenames) <= 24
-   study_idx = 1;
-else
-   study_idx = 2;
-end
-
 % day at which each mouse hit the reward threshold
-rew_threshold =  [6 21 -1 -1 -1 -1; 8 18 34 45 56 66];
+rew_threshold_day_names = [ "353 Timeout Day 04"; "354 Timeout Day 02"; "361 Timeout Day 06"; "362 Timeout Day 05"; "363 Timeout Day 04"; "365 Timeout Day 02" ];
+ext_day_names = [ "353 ZExtinction Day 01"; "354 ZExtinction Day 01"; "361 ZExtinction Day 01"; "362 ZExtinction Day 01"; "363 ZExtinction Day 01"; "365 ZExtinction Day 01"];
+cued_1_names = [  "353 Cued Day 01"; "354 Cued Day 01"; "361 Cued Day 01"; "362 Cued Day 01"; "363 Cued Day 01"; "365 Cued Day 01"];
+cued_4_names = [  "353 Cued Day 04"; "354 Cued Day 04"; "361 Cued Day 04"; "362 Cued Day 04"; "363 Cued Day 04"; "365 Cued Day 04"];
+timeout_3_names = [  "353 Timeout Day 03"; "354 Timeout Day 03"; "361 Timeout Day 03"; "362 Timeout Day 03"; "363 Timeout Day 03"; "365 Timeout Day 03"];
+timeout_last_names = [  "353 Timeout Day 07"; "354 Timeout Day 07"; "361 Timeout Day 07"; "362 Timeout Day 07"; "363 Timeout Day 07"; "365 Timeout Day 07"];
 
-% extinction days to group in aligned sheet
-% NOTE: Used extinction day 1 for HBO_06 because extinction day 2 seems to
-% be missing?
-ext_day = [12 24 -1 -1 -1 -1; 12 24 36 48 60 72];
+rew_threshold =  getDays(filenames, rew_threshold_day_names);
+ext_day = getDays(filenames, ext_day_names);
+cued_1 = getDays(filenames, cued_1_names);
+cued_4 = getDays(filenames, cued_4_names);
+timeout_3 = getDays(filenames, timeout_3_names);
+timeout_last = getDays(filenames, timeout_last_names); 
 
-% cued days 1 and 4, timeout days 3, 13, 15, and the last
-% day of timeout
-cued_1 = [1 13 -1 -1 -1 -1; 1 13 25 37 49 61];
-cued_4 = [4 16 -1 -1 -1 -1; 4 16 28 40 52 64];
-timeout_3 = [7 19 -1 -1 -1 -1; 7 19 31 43 55 67];
-timeout_last = [11 23 -1 -1 -1 -1; 11 23 35 47 59 71]; 
-
-days_array = [ cued_1(study_idx, :); cued_4(study_idx, :); timeout_3(study_idx, :); rew_threshold(study_idx, :); timeout_last(study_idx, :); ext_day(study_idx, :) ];
+days_array = [ cued_1; cued_4; timeout_3; rew_threshold; timeout_last; ext_day ];
 day_names = { 'Cued Day 01'; 'Cued Day 04'; 'Timeout Day 03'; 'Reward Threshold'; 'Final Timeout'; 'Extinction' };
 
 load(event_dir_path);
@@ -48,7 +41,7 @@ variable_names = { 'correct' 'tone' 'incorrect' 'receptacle' 'randrec' 'tonehit'
 
 for vidx=1:length(event_variables)
     event_variable = event_variables(vidx);
-    var_directory = join([ cohort_dir_path '\' variable_names{vidx} ], '');
+    var_directory = join([ cohort_dir_path '\' variable_names{event_variable} ], '');
     
     MDIR_DIRECTORY_NAME = var_directory; 
     make_directory;
@@ -121,4 +114,14 @@ for vidx=1:length(event_variables)
         print(save_fname, '-dpng');
 
     end
+end
+
+function days_idx = getDays(fnames, daynames)
+    days_idx_arr = zeros(length(daynames), 2);
+    for didx=1:length(daynames)
+        arr = strfind(fnames, daynames(didx));
+        idx = find(~cellfun(@isempty, arr), 1);
+        days_idx_arr(1, didx) = idx;
+    end
+    days_idx = days_idx_arr(1, :);
 end

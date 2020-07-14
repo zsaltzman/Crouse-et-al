@@ -14,19 +14,17 @@ output_dir_path = FP_BCI_PARENT_FOLDER;
 MDIR_DIRECTORY_NAME = output_dir_path;
 make_directory;
 
-% day at which each mouse hit the reward threshold
-rew_threshold =  [12 32 56];
+rew_threshold_day_names = ["3_Timeout_Day_08"; "4_Timeout_Day_08"; "6_Timeout_Day_13"];
+ext_day_names = ["3_ZZExt_Day_1"; "4_ZZExt_Day_1"; "6_ZZExt_Day_2"];
+cued_1_names = ["3_Cued_Day_1"; "4_Cued_Day_1"; "6_Cued_Day_1";];
+cued_4_names = ["3_Cued_Day_4"; "4_Cued_Day_4"; "6_Cued_Day_4";];
+timeout_3_names = ["3_Timeout_Day_03"; "4_Timeout_Day_03"; "6_Timeout_Day_03";];
 
-% extinction days to group in aligned sheet
-% NOTE: Used extinction day 1 for HBO_06 because extinction day 2 seems to
-% be missing?
-ext_day = [19 38 57];
-
-% cued days 1 and 4, timeout days 3, 13, 15, and the last
-% day of timeout
-cued_1 = [1 21 40];
-cued_4 = [4 24 43];
-timeout_3 = [7 26 46];
+rew_threshold =  getDays(filenames, rew_threshold_day_names);
+ext_day = getDays(filenames, ext_day_names);
+cued_1 = getDays(filenames, cued_1_names);
+cued_4 = getDays(filenames, cued_4_names);
+timeout_3 = getDays(filenames, timeout_3_names);
 
 days_array = [ cued_1; cued_4; timeout_3; rew_threshold; ext_day];
 day_names = { 'Cued Day 01'; 'Cued Day 04'; 'Timeout Day 03'; 'Reward Threshold'; 'Extinction' };
@@ -38,7 +36,7 @@ variable_names = { 'correct' 'tone' 'incorrect' 'receptacle' 'randrec' 'tonehit'
 
 for vidx=1:length(event_variables)
     event_variable = event_variables(vidx);
-    var_directory = join([ output_dir_path '\' variable_names{vidx} ], '');
+    var_directory = join([ output_dir_path '\' variable_names{event_variable} ], '');
     
     MDIR_DIRECTORY_NAME = var_directory; 
     make_directory;
@@ -109,4 +107,14 @@ for vidx=1:length(event_variables)
         print(save_fname, '-dpng');
 
     end
+end
+
+function days_idx = getDays(fnames, daynames)
+    days_idx_arr = zeros(length(daynames), 2);
+    for didx=1:length(daynames)
+        arr = strfind(fnames, daynames(didx));
+        idx = find(~cellfun(@isempty, arr), 1);
+        days_idx_arr(1, didx) = idx;
+    end
+    days_idx = days_idx_arr(1, :);
 end

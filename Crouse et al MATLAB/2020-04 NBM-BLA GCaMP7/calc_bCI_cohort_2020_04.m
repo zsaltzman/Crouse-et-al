@@ -24,21 +24,21 @@ else
 end
 
 % day at which each mouse hit the reward threshold
-rew_threshold =  [6 21 -1 -1 -1 -1; 8 18 34 45 56 66];
+rew_threshold_day_names = [ "891 Timeout Day 02"; "913 Timeout Day 05" ];
+ext_day_names = [ "891 ZExtinction Day 01"; "913 ZExtinction Day 01" ];
+cued_1_day_names = [ "891 Cued Day 01"; "913 Cued Day 01" ];
+cued_4_day_names = [ "891 Cued Day 04"; "913 Cued Day 04" ];
+timeout_3_day_names = [ "891 Timeout Day 03"; "913 Timeout Day 03" ];
+timeout_last_day_names = [ "891 Timeout Day 07"; "913 Timeout Day 07" ];
 
-% extinction days to group in aligned sheet
-% NOTE: Used extinction day 1 for HBO_06 because extinction day 2 seems to
-% be missing?
-ext_day = [12 24 -1 -1 -1 -1; 12 24 36 48 60 72];
+rew_threshold = getDays(filenames, rew_threshold_day_names);
+ext_day = getDays(filenames, ext_day_names);
+cued_1 = getDays(filenames, cued_1_day_names);
+cued_4 = getDays(filenames, cued_4_day_names);
+timeout_3 = getDays(filenames, timeout_3_day_names);
+timeout_last = getDays(filenames, timeout_last_day_names); 
 
-% cued days 1 and 4, timeout days 3, 13, 15, and the last
-% day of timeout
-cued_1 = [1 13 -1 -1 -1 -1; 1 13 25 37 49 61];
-cued_4 = [4 16 -1 -1 -1 -1; 4 16 28 40 52 64];
-timeout_3 = [7 19 -1 -1 -1 -1; 7 19 31 43 55 67];
-timeout_last = [11 23 -1 -1 -1 -1; 11 23 35 47 59 71]; 
-
-days_array = [ cued_1(study_idx, :); cued_4(study_idx, :); timeout_3(study_idx, :); rew_threshold(study_idx, :); timeout_last(study_idx, :); ext_day(study_idx, :) ];
+days_array = [ cued_1; cued_4; timeout_3; rew_threshold; timeout_last; ext_day ];
 day_names = { 'Cued Day 01'; 'Cued Day 04'; 'Timeout Day 03'; 'Reward Threshold'; 'Final Timeout'; 'Extinction' };
 
 load(event_dir_path);
@@ -48,7 +48,7 @@ variable_names = { 'correct' 'tone' 'incorrect' 'receptacle' 'randrec' 'tonehit'
 
 for vidx=1:length(event_variables)
     event_variable = event_variables(vidx);
-    var_directory = join([ cohort_dir_path '\' variable_names{vidx} ], '');
+    var_directory = join([ cohort_dir_path '\' variable_names{event_variable} ], '');
     
     MDIR_DIRECTORY_NAME = var_directory; 
     make_directory;
@@ -121,4 +121,15 @@ for vidx=1:length(event_variables)
         print(save_fname, '-dpng');
 
     end
+end
+
+
+function days_idx = getDays(fnames, daynames)
+    days_idx_arr = zeros(length(daynames), 2);
+    for didx=1:length(daynames)
+        arr = strfind(fnames, daynames(didx));
+        idx = find(~cellfun(@isempty, arr), 1);
+        days_idx_arr(1, didx) = idx;
+    end
+    days_idx = days_idx_arr(1, :);
 end

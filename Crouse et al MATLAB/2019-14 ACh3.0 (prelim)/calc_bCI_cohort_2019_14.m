@@ -14,20 +14,19 @@ output_dir_path = FP_BCI_PARENT_FOLDER;
 MDIR_DIRECTORY_NAME = output_dir_path;
 make_directory;
 
-% day at which each mouse hit the reward threshold
-% "MATLAB_0124 Timeout Day 09"; "MATLAB_0129 Timeout Day 03"; "MATLAB_0176 Timeout Day 10"; "MATLAB_0850 Timeout Day 06"; "MATLAB_1012 Timeout Day 03" 
-rew_threshold =  [13 26 52 67 83];
+rew_threshold_day_names = ["124 Timeout Day 09"; "129 Timeout Day 03"; "176 Timeout Day 10"; "850 Timeout Day 06"; "1012 Timeout Day 03" ];
+ext_day_names =["124 ZExtinction Day 01"; "129 ZExtinction Day 03"; "176 ZExtinction Day 01"; "850 ZExtinction Day 01"; "1012 ZExtinction Day 03"];
+cued_1_names = [  "124 Cued Day 01"; "129 Cued Day 01"; "176 Cued Day 01"; "850 Cued Day 01"; "1012 Cued Day 01";];
+cued_4_names = [  "124 Cued Day 04"; "129 Cued Day 04"; "176 Cued Day 04"; "850 Cued Day 04"; "1012 Cued Day 04";];
+timeout_3_names = [  "124 Timeout Day 03"; "129 Timeout Day 03"; "176 Timeout Day 03"; "850 Timeout Day 03"; "1012 Timeout Day 03";];
+timeout_last_names = [  "124 Timeout Day 07"; "129 Timeout Day 07"; "176 Timeout Day 07"; "850 Timeout Day 07"; "1012 Timeout Day 07";];
 
-% extinction days to group in aligned sheet
-%"MATLAB_0124 ZExtinction Day 01"; "MATLAB_0129 ZExtinction Day 03"; "MATLAB_0176 ZExtinction Day 01"; "MATLAB_0850 ZExtinction Day 01"; "MATLAB_1012 ZExtinction Day 03"
-ext_day = [17 38 55 74 95];
-
-% cued days 1 and 4, timeout days 3, 13, 15, and the last
-% day of timeout
-cued_1 = [1 20 39 58 77];
-cued_4 = [4 23 42 61 80];
-timeout_3 = [7 26 45 64 83];
-timeout_final = [ 16 35 54 73 92];
+rew_threshold =  getDays(filenames, rew_threshold_day_names);
+ext_day = getDays(filenames, ext_day_names);
+cued_1 = getDays(filenames, cued_1_names);
+cued_4 = getDays(filenames, cued_4_names);
+timeout_3 = getDays(filenames, timeout_3_names);
+timeout_last = getDays(filenames, timeout_last_names); 
 
 days_array = [ cued_1; cued_4; timeout_3; rew_threshold; timeout_final; ext_day];
 day_names = { 'Cued Day 01'; 'Cued Day 04'; 'Timeout Day 03'; 'Reward Threshold'; 'Final Timeout'; 'Extinction' };
@@ -39,7 +38,7 @@ variable_names = { 'correct' 'tone' 'incorrect' 'receptacle' 'randrec' 'tonehit'
 
 for vidx=1:length(event_variables)
     event_variable = event_variables(vidx);
-    var_directory = join([ output_dir_path '\' variable_names{vidx} ], '');
+    var_directory = join([ output_dir_path '\' variable_names{event_variable} ], '');
     
     MDIR_DIRECTORY_NAME = var_directory; 
     make_directory;
@@ -112,4 +111,12 @@ for vidx=1:length(event_variables)
     end
 end
 
-
+function days_idx = getDays(fnames, daynames)
+    days_idx_arr = zeros(length(daynames), 2);
+    for didx=1:length(daynames)
+        arr = strfind(fnames, daynames(didx));
+        idx = find(~cellfun(@isempty, arr), 1);
+        days_idx_arr(1, didx) = idx;
+    end
+    days_idx = days_idx_arr(1, :);
+end
