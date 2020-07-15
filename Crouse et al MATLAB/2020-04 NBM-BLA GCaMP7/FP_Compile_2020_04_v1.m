@@ -45,6 +45,8 @@ timestampfolder = FP_OUTPUT_DIRECTORY;
 MDIR_DIRECTORY_NAME = outputfolder;
 make_directory; 
 
+MDIR_DIRECTORY_NAME = FP_MATLAB_VARS;
+make_directory;
 
 %% MATLAB var saving options 
 %save just rawtogether and names daily
@@ -775,7 +777,7 @@ writematrix(timestampfile, FP_TIMESTAMP_FILE)
 %% Save data in file
 
 %save here, edit what you save up top to prevent scrolling a ton
-save([FP_MATLAB_VARS '.mat'], 'rawtogether', 'filenames', '-v7.3');
+save(FP_MATLAB_VARS_FILENAME, 'rawtogether', 'filenames', '-v7.3');
 
 %% Print code version text file
 
