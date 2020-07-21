@@ -1,3 +1,6 @@
+clear; 
+load(getPipelineVarsFilename);
+
 alpha = 1; % Error rate
 resamples = 1000; % Number of times to bootstrap
 sig = alpha / 100; % percentile alpha given to boot_CI
@@ -13,6 +16,9 @@ output_dir_path = FP_BCI_PARENT_FOLDER;
 
 MDIR_DIRECTORY_NAME = output_dir_path;
 make_directory;
+
+load(event_dir_path);
+filenames = datanames;
 
 rew_threshold_day_names = ["124 Timeout Day 09"; "129 Timeout Day 03"; "176 Timeout Day 10"; "850 Timeout Day 06"; "1012 Timeout Day 03" ];
 ext_day_names =["124 ZExtinction Day 01"; "129 ZExtinction Day 03"; "176 ZExtinction Day 01"; "850 ZExtinction Day 01"; "1012 ZExtinction Day 03"];
@@ -31,7 +37,6 @@ timeout_last = getDays(filenames, timeout_last_names);
 days_array = [ cued_1; cued_4; timeout_3; rew_threshold; timeout_final; ext_day];
 day_names = { 'Cued Day 01'; 'Cued Day 04'; 'Timeout Day 03'; 'Reward Threshold'; 'Final Timeout'; 'Extinction' };
 
-load(event_dir_path);
 event_dir = datanames; % Filenames loaded from the day graph data
 event_variables = [ 1, 2, 3, 4, 6]; 
 variable_names = { 'correct' 'tone' 'incorrect' 'receptacle' 'randrec' 'tonehit' 'tonemiss' 'inactive' };
@@ -112,6 +117,11 @@ for vidx=1:length(event_variables)
 end
 
 function days_idx = getDays(fnames, daynames)
+    % Unwrap fnames if necessary
+    if length(fnames) > 0 && isa(fnames{1,1}, 'cell');
+       fnames = vertcat(fnames{:});
+    end
+    
     days_idx_arr = zeros(length(daynames), 2);
     for didx=1:length(daynames)
         arr = strfind(fnames, daynames(didx));

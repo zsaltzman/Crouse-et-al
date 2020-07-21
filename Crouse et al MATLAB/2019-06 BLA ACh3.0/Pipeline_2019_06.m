@@ -14,7 +14,6 @@
 %clear everything to prevent issues
 clear; 
 
-
 % Make sure to change this directory to the parent folder of this pipeline.
 % e.g.: 'C:\Users\rbc52\Documents\MATLAB\Crouse et al\2019-06'
 FP_PARENT_DIRECTORY = 'D:\Picciotto Lab Stuff\Crouse et al v2\Crouse et al v2\Crouse et al MATLAB Outputs and Raw\2019-06 BLA ACh3.0';
@@ -25,8 +24,14 @@ if isempty(FP_PARENT_DIRECTORY)
    return
 end
 
+COMPILE_WITH_REF = 1; % 0 = false, 1 = true. Leave this on 0 unless you want to compile the pipeline to use reference instead of signal 
 
-FP_OUTPUT_DIRECTORY = [ FP_PARENT_DIRECTORY '\generated output' ];
+if COMPILE_WITH_REF
+   FP_OUTPUT_DIRECTORY = [FP_PARENT_DIRECTORY '\generated output (reference)'];
+else
+   FP_OUTPUT_DIRECTORY = [ FP_PARENT_DIRECTORY '\generated output' ];
+end
+
 FP_RAW_DIRECTORY = [ FP_PARENT_DIRECTORY '\raw' ];
 FP_PROC_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated processed'];
 FP_COMPILE_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated individual events by day' ];
@@ -53,20 +58,20 @@ make_directory
  
 % Fig_2B_S2_2A_summary_2019_06
 
-% Basic_FP_processing
+Basic_FP_processing
 
-% FP_Compile_2019_06
+FP_Compile_2019_06
 
 % FP_Compile_2019_06_ref
 
 % FP_Compile_2019_06_sig
 
-% Mean_SEM_calc_indiv_plots
+Mean_SEM_calc_indiv_plots
 
 % Actions_heatmaps_all_phases_pub
 	
 % Tone_poke_rec_heatmaps_by_mouse
 
-% calc_bCI
+calc_bCI
 
 calc_bCI_cohort_2019_06

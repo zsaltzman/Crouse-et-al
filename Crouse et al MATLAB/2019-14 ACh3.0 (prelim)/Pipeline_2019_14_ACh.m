@@ -1,6 +1,3 @@
-%% Zach notes: 
-%Basic FP Processing isn't skipping if already done
-
 %% Pipeline_2019_14
 % IMPORTANT NOTES:
 %1) Before running this code please make sure that all the
@@ -28,8 +25,14 @@ if isempty(FP_PARENT_DIRECTORY)
    return
 end
 
+COMPILE_WITH_REF = 1; % 0 = false, 1 = true. Leave this on 0 unless you want to compile the pipeline to use reference instead of signal 
 
-FP_OUTPUT_DIRECTORY = [ FP_PARENT_DIRECTORY '\generated output' ];
+if COMPILE_WITH_REF
+   FP_OUTPUT_DIRECTORY = [FP_PARENT_DIRECTORY '\generated output (reference)'];
+else
+    FP_OUTPUT_DIRECTORY = [ FP_PARENT_DIRECTORY '\generated output' ];
+end
+
 FP_RAW_DIRECTORY = [ FP_PARENT_DIRECTORY '\raw partial' ];
 FP_PROC_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated processed' ];
 FP_COMPILE_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated individual events by day' ];
@@ -53,20 +56,20 @@ make_directory
 
 summary_behavior_graphs
 
-% Basic_FP_processing_2019_14
+Basic_FP_processing_2019_14
 
-% FP_Compile_2019_14
+FP_Compile_2019_14
         
 % FP_Compile_2019_14_ref
  
 % FP_Compile_2019_14_sig
 
-% Mean_SEM_calc_indiv_plots
+Mean_SEM_calc_indiv_plots
 
 % Actions_heatmaps_all_phases_pub
 
 % Tone_poke_rec_heatmaps_by_mouse_pub
 
-% calc_bCI
+calc_bCI
 
 calc_bCI_cohort_2019_14

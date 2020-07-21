@@ -1,12 +1,15 @@
+clear; 
+load(getPipelineVarsFilename);
+
 alpha = 1; % Error rate
 resamples = 1000; % Number of times to bootstrap
 sig = alpha / 100; % percentile alpha given to boot_CI
 fs = 122.15; % Close estimation to a sampling frequency that would correspond to 1832 data points for 15 seconds
 activity_threshold = 0.3 * fs;
 
-
 trace_samples = 1832; % Number of timepoints in a 15 second window of the trace
 climits = [-2 6]; % Y axis bounds for output graphs
+
 
 event_dir_path = FP_INDIVIDUAL_DAY_DATA_FILENAME;
 output_dir_path = FP_BCI_PARENT_FOLDER;
@@ -16,12 +19,8 @@ make_directory;
 
 cohort_dir_path = join([ FP_BCI_PARENT_FOLDER '\cohort' ]);
 
-% Determine which study is being run by using number of filenames
-if length(filenames) <= 24
-   study_idx = 1;
-else
-   study_idx = 2;
-end
+load(event_dir_path);
+filenames = datanames; % Filenames loaded from the day graph data
 
 % day at which each mouse hit the reward threshold
 rew_threshold_day_names = [ "891 Timeout Day 02"; "913 Timeout Day 05" ];
@@ -41,8 +40,6 @@ timeout_last = getDays(filenames, timeout_last_day_names);
 days_array = [ cued_1; cued_4; timeout_3; rew_threshold; timeout_last; ext_day ];
 day_names = { 'Cued Day 01'; 'Cued Day 04'; 'Timeout Day 03'; 'Reward Threshold'; 'Final Timeout'; 'Extinction' };
 
-load(event_dir_path);
-event_dir = datanames; % Filenames loaded from the day graph data
 event_variables = [ 1, 2, 3, 4, 6]; 
 variable_names = { 'correct' 'tone' 'incorrect' 'receptacle' 'randrec' 'tonehit' 'tonemiss' 'inactive' };
 
@@ -125,6 +122,11 @@ end
 
 
 function days_idx = getDays(fnames, daynames)
+    % Unwrap fnames if necessary
+    if length(fnames) > 0 && isa(fnames{1,1}, 'cell');
+       fnames = vertcat(fnames{:});
+    end
+    
     days_idx_arr = zeros(length(daynames), 2);
     for didx=1:length(daynames)
         arr = strfind(fnames, daynames(didx));

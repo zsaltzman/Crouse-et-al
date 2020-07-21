@@ -1,3 +1,5 @@
+clear; 
+
 % Make sure to change this directory to the parent folder of this pipeline.
 % e.g.: 'C:\Users\rbc52\Documents\MATLAB\Crouse et al\2019-06'
 FP_PARENT_DIRECTORY = 'D:\Picciotto Lab Stuff\Crouse et al v2\Crouse et al v2\Crouse et al MATLAB Outputs and Raw\2020-04 BLA GCaMP6';
@@ -8,8 +10,14 @@ if isempty(FP_PARENT_DIRECTORY)
    return
 end
 
+COMPILE_WITH_REF = 1; % 0 = false, 1 = true. Leave this on 0 unless you want to compile the pipeline to use reference instead of signal 
 
-FP_OUTPUT_DIRECTORY = [ FP_PARENT_DIRECTORY '\generated output' ];
+if COMPILE_WITH_REF
+   FP_OUTPUT_DIRECTORY = [FP_PARENT_DIRECTORY '\generated output (reference)'];
+else
+   FP_OUTPUT_DIRECTORY = [ FP_PARENT_DIRECTORY '\generated output' ];
+end
+
 FP_RAW_DIRECTORY = [ FP_PARENT_DIRECTORY '\raw' ];
 FP_PROC_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated processed' ];
 FP_COMPILE_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated individual events by day' ];
@@ -73,7 +81,7 @@ rick_tone_poke_rec_heatmaps_by_mouse_v4
 % is the expected and correct process of bootstrapping. If you want to
 % reduce the variance between runs, you may change the number of boots
 % within the calc_bCI code. 
-%calc_bCI
+calc_bCI
 
 calc_bCI_cohort_2020_04
 

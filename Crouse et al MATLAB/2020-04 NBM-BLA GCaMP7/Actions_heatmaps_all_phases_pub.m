@@ -19,8 +19,6 @@ make_directory;
 skips = [];
 
 %Groups
-%lumped 850 in with gach for this
-gcamp6 = [353 354 361 362 363 365];
 gcamp7 = [891 913];
 
 %file to skip
@@ -44,31 +42,21 @@ end
 all_mouse_ID= unique(data_mouse_ID);
 
 %for drawing white line
-% TODO: Update reward thresholds and extinction days once I hear from rick
-% First row is gcamp7, second is gcamp6
-% NOTE: Timeout days for 354 and 365 are dummies, take them out later!
-rew_threshold= ["0891 Timeout Day 02" "0913 Timeout Day 05" "" "" "" ""; "353 Timeout Day 04" "354 Timeout Day 02" "361 Timeout Day 06" "362 Timeout Day 05" "363 Timeout Day 04" "365 Timeout Day 02" ];
-Ext_Day =["0891 ZExtinction Day 01" "0913 ZExtinction Day 01" "" "" "" ""; "353 ZExtinction Day 01" "354 ZExtinction Day 01" "361 ZExtinction Day 01" "362 ZExtinction Day 01" "363 ZExtinction Day 01" "365 ZExtinction Day 01"];
+rew_threshold= ["0891 Timeout Day 02" "0913 Timeout Day 05" ];
+Ext_Day =["0891 ZExtinction Day 01" "0913 ZExtinction Day 01" ];
 
 %set for loop num
 nummer = 1:size(all_mouse_ID,1);
 for num = nummer
     %Define mouse_ID number for the run of the for loop
     mouse_ID = all_mouse_ID(num);
-      
-    %What indicator is it?
-    if any(mouse_ID == gcamp7)
-        indicator = 'NBM-BLA GCaMP7';
-        climits = [-3 7];
-        gcampnum=find(gcamp7==mouse_ID);
-        expidx = 1;
-    else
-        indicator = 'BLA GCaMP6';
-        climits = [-3 7];
-        gcampnum=find(gcamp6==mouse_ID);
-        expidx = 2;
-    end
-        
+    
+    indicator = 'NBM-BLA GCaMP7';
+    climits = [-3 7];
+    gcampnum=find(gcamp7==mouse_ID);
+    expidx = 1;
+    
+    
     %Cut down raw to just current mouse
     %Index all rows with mouse_ID and select those rows from graphdata  
     mousemean = graphmean((data_mouse_ID(:,1) == mouse_ID),:);

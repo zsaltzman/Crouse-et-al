@@ -1,3 +1,6 @@
+clear; 
+load(getPipelineVarsFilename);
+
 alpha = 1; % Error rate
 resamples = 1000; % Number of times to bootstrap
 sig = alpha / 100; % percentile alpha given to boot_CI
@@ -10,6 +13,9 @@ climits = [-2 6]; % Y axis bounds for output graphs
 
 event_dir_path = FP_INDIVIDUAL_DAY_DATA_FILENAME;
 output_dir_path = FP_BCI_PARENT_FOLDER;
+
+load(event_dir_path);
+filenames = datanames; 
 
 MDIR_DIRECTORY_NAME = output_dir_path;
 make_directory;
@@ -110,6 +116,11 @@ for vidx=1:length(event_variables)
 end
 
 function days_idx = getDays(fnames, daynames)
+    % Unwrap fnames if necessary
+    if length(fnames) > 0 && isa(fnames{1,1}, 'cell');
+       fnames = vertcat(fnames{:});
+    end   
+    
     days_idx_arr = zeros(length(daynames), 2);
     for didx=1:length(daynames)
         arr = strfind(fnames, daynames(didx));

@@ -1,3 +1,6 @@
+clear; 
+load(getPipelineVarsFilename);
+
 alpha = 1; % Error rate
 resamples = 1000; % Number of times to bootstrap
 sig = alpha / 100; % percentile alpha given to boot_CI
@@ -23,6 +26,9 @@ cued_1_names = [  "353 Cued Day 01"; "354 Cued Day 01"; "361 Cued Day 01"; "362 
 cued_4_names = [  "353 Cued Day 04"; "354 Cued Day 04"; "361 Cued Day 04"; "362 Cued Day 04"; "363 Cued Day 04"; "365 Cued Day 04"];
 timeout_3_names = [  "353 Timeout Day 03"; "354 Timeout Day 03"; "361 Timeout Day 03"; "362 Timeout Day 03"; "363 Timeout Day 03"; "365 Timeout Day 03"];
 timeout_last_names = [  "353 Timeout Day 07"; "354 Timeout Day 07"; "361 Timeout Day 07"; "362 Timeout Day 07"; "363 Timeout Day 07"; "365 Timeout Day 07"];
+
+load(FP_INDIVIDUAL_DAY_DATA_FILENAME);
+filenames = datanames;
 
 rew_threshold =  getDays(filenames, rew_threshold_day_names);
 ext_day = getDays(filenames, ext_day_names);
@@ -117,6 +123,11 @@ for vidx=1:length(event_variables)
 end
 
 function days_idx = getDays(fnames, daynames)
+    % Unwrap fnames if necessary
+    if length(fnames) > 0 && isa(fnames{1,1}, 'cell');
+       fnames = vertcat(fnames{:});
+    end
+    
     days_idx_arr = zeros(length(daynames), 2);
     for didx=1:length(daynames)
         arr = strfind(fnames, daynames(didx));

@@ -17,6 +17,7 @@ make_directory
 
 %Pull uncorrected DF/F0
 dff0 = 'Ca2+ Signal (DF/F0)';
+dff0_ref = 'Reference (DF/F0)';
 
 medpcfile = FP_MEDPC_FILE;
 
@@ -67,7 +68,11 @@ for row = 1:length(raw)
         end
         
         %Grab dF/F col
-        if strcmp(raw{row,2}{1,column}, dff0)
+        if ~COMPILE_WITH_REF && strcmp(raw{row,2}{1,column}, dff0)
+            data{row,2}(:,2) = raw{row,2}(2:end,column);
+        end
+        
+        if COMPILE_WITH_REF && strcmp(raw{row,2}{1,column}, dff0_ref)
             data{row,2}(:,2) = raw{row,2}(2:end,column);
         end
         

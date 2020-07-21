@@ -25,9 +25,15 @@ if isempty(FP_PARENT_DIRECTORY)
    return
 end
 
+COMPILE_WITH_REF = 1; % 0 = false, 1 = true. Leave this on 0 unless you want to compile the pipeline to use reference instead of signal 
 
-FP_OUTPUT_DIRECTORY = [ FP_PARENT_DIRECTORY '\generated output' ];
-FP_RAW_DIRECTORY = [ FP_PARENT_DIRECTORY '\raw partial' ];
+if COMPILE_WITH_REF
+   FP_OUTPUT_DIRECTORY = [FP_PARENT_DIRECTORY '\generated output (reference)'];
+else
+    FP_OUTPUT_DIRECTORY = [ FP_PARENT_DIRECTORY '\generated output' ];
+end
+
+FP_RAW_DIRECTORY = [ FP_PARENT_DIRECTORY '\raw' ];
 FP_PROC_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated processed' ];
 FP_COMPILE_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated individual events by day' ];
 FP_COMPILE_REF_SIG_DIRECTORY = [ FP_OUTPUT_DIRECTORY '\generated individual events by day Reference vs Signal' ];
@@ -48,22 +54,22 @@ save(getPipelineVarsFilename);
 MDIR_DIRECTORY_NAME = FP_OUTPUT_DIRECTORY;
 make_directory
 
-% Fig_2G_S2_4A_summary_2019_14
-% 
-% Basic_FP_processing_2019_14
-% 
-% FP_Compile_2019_14
-%         
-% FP_Compile_2019_14_ref
-% 
-% FP_Compile_2019_14_sig
-% 
-% Mean_SEM_calc_indiv_plots
-% 
-% Actions_heatmaps_all_phases_pub
-% 
-% Tone_poke_rec_heatmaps_by_mouse_pub
+Fig_2G_S2_4A_summary_2019_14
 
-% calc_bCI
+Basic_FP_processing_2019_14
+
+FP_Compile_2019_14
+        
+FP_Compile_2019_14_ref
+
+FP_Compile_2019_14_sig
+
+Mean_SEM_calc_indiv_plots
+
+Actions_heatmaps_all_phases_pub
+
+Tone_poke_rec_heatmaps_by_mouse_pub
+
+calc_bCI
 
 calc_bCI_cohort_2019_14

@@ -89,7 +89,7 @@ for file = 1:size(graphdata,1)
     end
 end
 
-save(save_name, 'graphmean', 'graphsem', 'datanames', '-v7.3');
+save(save_name, 'graphdata', 'graphmean', 'graphsem', 'datanames', '-v7.3');
 
 % print the version of the code used
 fileID = fopen([outputfolder '\' date 'codeused.txt'],'w');

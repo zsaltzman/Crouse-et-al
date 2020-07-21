@@ -123,7 +123,7 @@ for file = 1:size(graphdata,1)
 end
 
 
-save(save_name, 'graphmean', 'graphsem', 'datanames', '-v7.3');
+save(save_name, 'graphmean', 'graphsem', 'graphdata', 'datanames', '-v7.3');
 
 %print the version of the code used
 fileID = fopen([outputfolder '\' date 'codeused.txt'],'w');
