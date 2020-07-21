@@ -54,9 +54,13 @@ for row = 1:size(raw,1)
         if strcmp(raw{row,2}{1,column}, 'Time')
             data{row,2}(:,1) = raw{row,2}(2:end,column);
         end
+
+         %Grab dF/F col
+        if ~COMPILE_WITH_REF && strcmp(raw{row,2}{1,column}, 'Ca2+ Signal (DF/F0)')
+            data{row,2}(:,2) = raw{row,2}(2:end,column);
+        end
         
-        %Grab dF/F col
-        if strcmp(raw{row,2}{1,column}, 'Ca2+ Signal (DF/F0)')
+        if COMPILE_WITH_REF && strcmp(raw{row,2}{1,column}, 'Reference (DF/F0)')
             data{row,2}(:,2) = raw{row,2}(2:end,column);
         end
         
